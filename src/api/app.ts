@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 
 class App {
 	public app: express.Application;
@@ -8,6 +9,19 @@ class App {
 	constructor(port: number) {
 		this.app = express();
 		this.port = port;
+		App.connectToDatabase();
+	}
+
+	private static connectToDatabase(): void {
+		const options = {
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			useCreateIndex: true,
+			useFindAndModify: false
+		};
+		const databaseURL = process.env.MONGODB_URL as string;
+		mongoose.connect(databaseURL, options);
+		mongoose.connection.on('error', (error) => console.log(error));
 	}
 
 	public listen(): void {
