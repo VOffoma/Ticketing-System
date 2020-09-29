@@ -1,5 +1,5 @@
-import ticketService from './ticket.service';
-import db from '../../utils/db';
+import ticketService from '../ticket.service';
+import db from '../../../utils/db';
 
 beforeAll(async () => {
 	await db.open();
@@ -9,13 +9,9 @@ afterAll(async () => {
 	await db.close();
 });
 
-afterEach(async () => {
-	await db.removeAllDocuments('tickets');
-});
-
-describe('The TicketService', () => {
+describe('TicketService', () => {
 	describe('CreateTicket function', () => {
-		it('should resolve with an object containing the initial properties', async () => {
+		it('should return an object containing the initial properties when valid input is given', async () => {
 			const ticketInfo = {
 				author: 'Exinne',
 				title: 'poor cake quality',
@@ -24,7 +20,7 @@ describe('The TicketService', () => {
 			await expect(ticketService.createTicket(ticketInfo)).resolves.toMatchObject(ticketInfo);
 		});
 
-		it('should reject when an invalid input is sent', async () => {
+		it('should throw an error when an invalid input is given', async () => {
 			const ticketInfo = {
 				author: '',
 				title: 'poor cake quality',
@@ -32,49 +28,72 @@ describe('The TicketService', () => {
 			};
 			await expect(ticketService.createTicket(ticketInfo)).rejects.toThrowError();
 		});
+
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
+		});
 	});
 
 	describe('GetAllTickets function', () => {
-		it('should resolve with an array containing a single ticket object', async () => {
+		beforeAll(async () => {
 			const ticketInfo = {
 				author: 'Zinne',
 				title: 'poor cake quality',
 				content: 'too bad'
 			};
-			await ticketService.createTicket(ticketInfo);
+			const ticket = await ticketService.createTicket(ticketInfo);
+		});
+
+		it('should return an array containing a single ticket object when there is just one ticket', async () => {
 			await expect(ticketService.getAllTickets()).resolves.toHaveLength(1);
+		});
+
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
 		});
 	});
 
 	describe('getTicketById function', () => {
-		it('should resolve with an object containing ticketInfo', async () => {
-			const ticketInfo = {
+		let ticketId, ticketInfo;
+		beforeAll(async () => {
+			ticketInfo = {
 				author: 'Zinne',
 				title: 'poor cake quality',
 				content: 'too bad'
 			};
 			const ticket = await ticketService.createTicket(ticketInfo);
-			await expect(ticketService.getTicketById(ticket._id)).resolves.toMatchObject(
-				ticketInfo
-			);
+			ticketId = ticket._id;
 		});
 
-		it('should reject when the ticketId does not exist', async () => {
+		it('should return an object containing ticketInfo when given a valid ticketId', async () => {
+			await expect(ticketService.getTicketById(ticketId)).resolves.toMatchObject(ticketInfo);
+		});
+
+		it('should throw an error when the ticketId does not exist', async () => {
 			const ticketId = 'eieeieiiww';
 			await expect(ticketService.getTicketById(ticketId)).rejects.toThrowError();
+		});
+
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
 		});
 	});
 
 	describe('updateTicketStatus function', () => {
-		it('should resolve with an object containing the updated property', async () => {
+		let ticketId;
+		beforeAll(async () => {
 			const ticketInfo = {
 				author: 'Zinne',
 				title: 'poor cake quality',
 				content: 'too bad'
 			};
 			const ticket = await ticketService.createTicket(ticketInfo);
+			ticketId = ticket._id;
+		});
+
+		it('should return an object containing the updated property when given a valid update object', async () => {
 			const ticketUpdate = {
-				Id: ticket._id,
+				Id: ticketId,
 				updatedStatus: 'INPROGRESS'
 			};
 			await expect(ticketService.updateTicketStatus(ticketUpdate)).resolves.toHaveProperty(
@@ -83,26 +102,24 @@ describe('The TicketService', () => {
 			);
 		});
 
-		it('should reject when the ticketId does not exist', async () => {
+		it('should throw an error when the ticketId does not exist', async () => {
 			const ticketUpdate = {
 				Id: 'ksjseiksks',
-				updatedStatus: 'InProgress'
+				updatedStatus: 'INPROGRESS'
 			};
 			await expect(ticketService.updateTicketStatus(ticketUpdate)).rejects.toThrowError();
 		});
 
-		it('should reject when the status property receives an invalid value', async () => {
-			const ticketInfo = {
-				author: 'Zinne',
-				title: 'poor cake quality',
-				content: 'too bad'
-			};
-			const ticket = await ticketService.createTicket(ticketInfo);
+		it('should throw an error when the status property receives an invalid value', async () => {
 			const ticketUpdate = {
-				Id: ticket._id,
+				Id: ticketId,
 				updatedStatus: 'happy'
 			};
 			await expect(ticketService.updateTicketStatus(ticketUpdate)).rejects.toThrowError();
+		});
+
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
 		});
 	});
 });
