@@ -1,9 +1,17 @@
 import 'dotenv/config';
-import App from './api/app';
-import validateEnv from './api/utils/validateEnv';
+import app from './api/app';
+import logger from './api/utils/logger';
+import db from './api/utils/db';
 
-validateEnv();
-const port = process.env.PORT || 7077;
-const app = new App(port as number);
+function startServer() {
+	db.open().then(() => {
+		const port = process.env.PORT || 7077;
+		app.set('port', port);
 
-app.listen();
+		app.listen(port, () => {
+			logger.info(`App listening on the port ${port}`);
+		});
+	});
+}
+
+startServer();

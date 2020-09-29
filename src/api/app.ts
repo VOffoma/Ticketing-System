@@ -1,34 +1,33 @@
-import express from 'express';
-import mongoose from 'mongoose';
+import express, { Request, Response, NextFunction } from 'express';
+import bodyParser from 'body-parser';
+import createError from 'http-errors';
+import { ValidationError } from 'express-validation';
+import routes from './components/routes';
 
-class App {
-	public app: express.Application;
+const app: express.Application = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-	public port: number;
+app.use('/api/v1', routes);
 
-	constructor(port: number) {
-		this.app = express();
-		this.port = port;
-		App.connectToDatabase();
+/// catch 404 and forward to error handler
+app.use((request: Request, response: Response, next: NextFunction) => {
+	const error = createError(404, 'The path you seek does not exist');
+	next(error);
+});
+
+app.use((error, request: Request, response: Response, next: NextFunction) => {
+	let validationErrorMessage;
+	if (error instanceof ValidationError) {
+		const validationErrorDetails = error.details[0];
+		const validationErrorKey = Object.keys(validationErrorDetails)[0];
+		validationErrorMessage = validationErrorDetails[validationErrorKey];
 	}
+	response.status(error.status || error.statusCode || 500);
+	response.json({
+		message: validationErrorMessage || error.message,
+		stack: error.stack
+	});
+});
 
-	private static connectToDatabase(): void {
-		const options = {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useCreateIndex: true,
-			useFindAndModify: false
-		};
-		const databaseURL = process.env.MONGODB_URL as string;
-		mongoose.connect(databaseURL, options);
-		mongoose.connection.on('error', (error) => console.log(error));
-	}
-
-	public listen(): void {
-		this.app.listen(this.port, () => {
-			console.log(`App listening on the port ${this.port}`);
-		});
-	}
-}
-
-export default App;
+export default app;
