@@ -18,13 +18,15 @@ interface Config {
 	mongodb: {
 		url: string;
 	};
+	JWTSecret: string;
 }
 
 const config: Config = {
 	port: parsedEnv.PORT as number,
 	mongodb: {
 		url: parsedEnv.MONGODB_URL as string
-	}
+	},
+	JWTSecret: parsedEnv.JWTSECRET
 };
 
 export default config;

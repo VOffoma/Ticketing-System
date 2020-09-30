@@ -1,8 +1,10 @@
 import { Router } from 'express';
+import authRouter from './auth/authRouter';
 import ticketRouter from './tickets/ticketRouter';
 
 const routes = Router();
 
+routes.use('/auth', authRouter);
 routes.use('/tickets', ticketRouter);
 
 routes.get('/', (req, res) => {
