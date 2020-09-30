@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { validate } from 'express-validation';
+import verifyAuthentication from '../../middleware/verifyAuthentication';
 import validationRules from './ticket.validationRules';
 import { TicketInfo } from './ticket.interface';
 import ticketService from './ticket.service';
@@ -9,6 +10,7 @@ const ticketRoutes = Router();
 
 ticketRoutes.get(
 	'/',
+	verifyAuthentication,
 	asyncHandler(async (request: Request, response: Response) => {
 		const tickets = await ticketService.getAllTickets();
 		response.status(200).send(tickets);
@@ -17,6 +19,7 @@ ticketRoutes.get(
 
 ticketRoutes.post(
 	'/',
+	verifyAuthentication,
 	validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const ticketDetails: TicketInfo = request.body;
@@ -27,6 +30,7 @@ ticketRoutes.post(
 
 ticketRoutes.get(
 	'/:ticketId',
+	verifyAuthentication,
 	validate(validationRules.ticketId, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const ticket = await ticketService.getTicketById(request.params.ticketId);
@@ -36,6 +40,7 @@ ticketRoutes.get(
 
 ticketRoutes.patch(
 	'/:ticketId',
+	verifyAuthentication,
 	validate(validationRules.ticketUpdate, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const update = { Id: request.params.ticketId, updatedStatus: request.body.status };
