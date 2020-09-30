@@ -3,8 +3,8 @@ import { Ticket } from './ticket.interface';
 
 const ticketSchema = new mongoose.Schema({
 	author: {
-		type: String,
-		required: true
+		ref: 'User',
+		type: mongoose.Schema.Types.ObjectId
 	},
 	content: {
 		type: String,

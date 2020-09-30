@@ -22,7 +22,7 @@ ticketRoutes.post(
 	verifyAuthentication,
 	validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
-		const ticketDetails: TicketInfo = request.body;
+		const ticketDetails: TicketInfo = { ...request.body, author: request.currentUser._id };
 		const newTicket = await ticketService.createTicket(ticketDetails);
 		return response.status(201).send(newTicket);
 	})
