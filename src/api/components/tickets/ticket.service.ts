@@ -1,10 +1,12 @@
 import createError from 'http-errors';
 import TicketModel from './ticket.model';
-import { TicketInfo, Ticket, TicketStatus } from './ticket.interface';
+import CommentModel from '../comments/comment.model';
+import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
 
-async function createTicket(ticketDetails: TicketInfo): Promise<Ticket> {
+async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);
-	const savedTicket = createdTicket.save();
+	const savedTicket = await createdTicket.save();
+	await savedTicket.populate('author').execPopulate();
 	return savedTicket;
 }
 
@@ -37,9 +39,34 @@ async function updateTicketStatus(ticketUpdate: {
 	return ticket;
 }
 
+async function getAllCommentsOnATicket(ticketId) {
+	const comments = await CommentModel.find({ ticketId: ticketId });
+	return comments;
+}
+
+async function addCommentToTicket(commentDetails) {
+	const { ticketId, commentAuthor } = commentDetails;
+	const ticket = await TicketModel.findById(ticketId);
+	if (!ticket) {
+		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+	}
+	// if ( && commentAuthor === ticket.author) {
+	// 	throw createError(
+	// 		403,
+	// 		`You can not place a comment untill a support person has responded to your ticket`
+	// 	);
+	// }
+	const createdComment = new CommentModel(commentDetails);
+	const savedComment = await createdComment.save();
+	await savedComment.populate('commentAuthor').execPopulate();
+	return savedComment;
+}
+
 export default {
 	createTicket,
 	getAllTickets,
 	getTicketById,
-	updateTicketStatus
+	updateTicketStatus,
+	addCommentToTicket,
+	getAllCommentsOnATicket
 };

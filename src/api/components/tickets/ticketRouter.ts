@@ -3,11 +3,32 @@ import asyncHandler from 'express-async-handler';
 import { validate } from 'express-validation';
 import verifyAuthentication from '../../middleware/verifyAuthentication';
 import validationRules from './ticket.validationRules';
-import { TicketInfo } from './ticket.interface';
+import { TicketInputDTO } from './ticket.interface';
 import ticketService from './ticket.service';
 
 const ticketRoutes = Router();
 
+ticketRoutes.get(
+	'/:ticketId/comments',
+	verifyAuthentication,
+	asyncHandler(async (request: Request, response: Response) => {
+		const comments = await ticketService.getAllCommentsOnATicket(request.params.ticketId);
+		response.status(200).send(comments);
+	})
+);
+
+ticketRoutes.post(
+	'/:ticketId/comments',
+	verifyAuthentication,
+	asyncHandler(async (request: Request, response: Response) => {
+		const savedComment = await ticketService.addCommentToTicket({
+			commentAuthor: request.currentUser._id,
+			content: request.body.content,
+			ticketId: request.params.ticketId
+		});
+		response.status(201).send(savedComment);
+	})
+);
 ticketRoutes.get(
 	'/',
 	verifyAuthentication,
@@ -22,7 +43,7 @@ ticketRoutes.post(
 	verifyAuthentication,
 	validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
-		const ticketDetails: TicketInfo = { ...request.body, author: request.currentUser._id };
+		const ticketDetails: TicketInputDTO = { ...request.body, author: request.currentUser._id };
 		const newTicket = await ticketService.createTicket(ticketDetails);
 		return response.status(201).send(newTicket);
 	})

@@ -16,7 +16,12 @@ const verifyAuthentication = async (request: Request, response: Response, next: 
 		if (!token) {
 			next(createError(401, 'Please login to access this route'));
 		}
-		request.currentUser = await verifyTokenAndReturnUser(token);
+
+		const authenticatedUser = await verifyTokenAndReturnUser(token);
+		if (!authenticatedUser) {
+			next(createError(401, 'Please login to access this route'));
+		}
+		request.currentUser = authenticatedUser;
 		next();
 	} catch (error) {
 		next(createError(401, 'Please login to access this route'));

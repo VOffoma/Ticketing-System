@@ -1,31 +1,34 @@
-import * as mongoose from 'mongoose';
+import { Schema, Model, model } from 'mongoose';
 import { Ticket } from './ticket.interface';
 
-const ticketSchema = new mongoose.Schema({
-	author: {
-		ref: 'User',
-		type: mongoose.Schema.Types.ObjectId
+const ticketSchema = new Schema(
+	{
+		author: {
+			ref: 'User',
+			type: Schema.Types.ObjectId
+		},
+		content: {
+			type: String,
+			required: 'Please enter a ticket content'
+		},
+		title: {
+			type: String,
+			required: 'Please enter a ticket title'
+		},
+		status: {
+			type: String,
+			enum: ['OPEN', 'INPROGRESS', 'CANCELLED', 'SOLVED'],
+			default: 'OPEN',
+			required: true
+		},
+		supportPerson: {
+			ref: 'User',
+			type: Schema.Types.ObjectId
+		}
 	},
-	content: {
-		type: String,
-		required: 'Please enter a ticket content'
-	},
-	title: {
-		type: String,
-		required: 'Please enter a ticket title'
-	},
-	status: {
-		type: String,
-		enum: ['OPEN', 'INPROGRESS', 'CANCELLED', 'SOLVED'],
-		default: 'OPEN',
-		required: true
-	},
-	createdAt: {
-		type: Date,
-		default: Date.now
-	}
-});
+	{ timestamps: true }
+);
 
-const ticketModel = mongoose.model<Ticket>('Ticket', ticketSchema);
+const ticketModel = model<Ticket>('Ticket', ticketSchema);
 
 export default ticketModel;

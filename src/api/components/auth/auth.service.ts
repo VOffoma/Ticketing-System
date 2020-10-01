@@ -1,7 +1,7 @@
 import { User } from '../users/user.model';
-import UserInfo, { UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
+import { UserBase, UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
 
-async function registerUser(userDetails: UserInputDTO): Promise<UserInfo> {
+async function registerUser(userDetails: UserInputDTO): Promise<UserBase> {
 	const user = new User(userDetails);
 	const newUser = await user.save();
 	return newUser;

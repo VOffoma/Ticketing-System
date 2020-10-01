@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Schema, Model, model } from 'mongoose';
 import config from '../../../config';
-import UserInfo from './user.interface';
+import { UserBase } from './user.interface';
 
 const userSchema = new Schema(
 	{
@@ -57,7 +57,7 @@ userSchema.pre<UserDocument>('save', async function (): Promise<void> {
 	}
 });
 
-userSchema.virtual('fullName').get(function (this: UserInfo) {
+userSchema.virtual('fullName').get(function (this: UserBase) {
 	return `${this.firstName} ${this.lastName}`;
 });
 
@@ -114,7 +114,7 @@ userSchema.statics.findByCredentials = async function (email, password): Promise
 	return user;
 };
 
-export interface UserDocument extends UserInfo {
+export interface UserDocument extends UserBase {
 	comparePasswords(password: string): Promise<boolean>;
 	generateToken();
 	getAuthenticationInfo();
