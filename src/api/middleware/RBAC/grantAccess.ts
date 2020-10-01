@@ -2,7 +2,7 @@ import createError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
 import roles from './roles';
 
-const grantAccess = function (action: string, resource: string) {
+function grantAccess(action: string, resource: string) {
 	return async (request: Request, response: Response, next: NextFunction) => {
 		try {
 			const permission = roles.can(request.currentUser.role)[action](resource);
@@ -14,6 +14,6 @@ const grantAccess = function (action: string, resource: string) {
 			next(error);
 		}
 	};
-};
+}
 
 export default grantAccess;
