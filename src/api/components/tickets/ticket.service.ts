@@ -56,16 +56,12 @@ async function addCommentToTicket(commentDetails) {
 	return savedComment;
 }
 
-async function generateTicketReport(reportCriteria: {
-	status: string;
-	duration: number;
-}): Promise<Record<string, string>> {
-	const { status, duration } = reportCriteria;
+async function generateTicketReport(): Promise<Record<string, string>> {
 	const today = new Date();
-	const startDate = today.getDate() - (duration as number);
+	const startDate = today.getDate() - 30;
 
 	const tickets = await TicketModel.find({
-		status: status as TicketStatus,
+		status: 'SOLVED' as TicketStatus,
 		createdAt: { $gte: startDate }
 	});
 

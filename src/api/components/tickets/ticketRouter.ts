@@ -9,16 +9,11 @@ import ticketService from './ticket.service';
 
 const ticketRoutes = Router();
 
-ticketRoutes.get(
-	'/report',
-	verifyAuthentication,
-	grantAccess('readAny', 'ticket'),
-	async (request: Request, response: Response) => {
-		const report = await ticketService.generateTicketReport(request.body);
-		response.header('Content-Type', 'text/csv');
-		return response.attachment(report.fileName).send(report.csvData);
-	}
-);
+ticketRoutes.get('/report', verifyAuthentication, async (request: Request, response: Response) => {
+	const report = await ticketService.generateTicketReport();
+	response.header('Content-Type', 'text/csv');
+	return response.attachment(report.fileName).send(report.csvData);
+});
 
 ticketRoutes.get(
 	'/:ticketId/comments',
