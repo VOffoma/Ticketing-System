@@ -2,6 +2,7 @@ import createError from 'http-errors';
 import TicketModel from './ticket.model';
 import { Comment } from '../comments/comment.model';
 import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
+import generateCSVReport from '../../utils/generateCSVReport';
 
 async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);
@@ -55,11 +56,34 @@ async function addCommentToTicket(commentDetails) {
 	return savedComment;
 }
 
+async function generateTicketReport(reportCriteria: {
+	status: string;
+	duration: number;
+}): Promise<Record<string, string>> {
+	const { status, duration } = reportCriteria;
+	const today = new Date();
+	const startDate = today.getDate() - (duration as number);
+
+	const tickets = await TicketModel.find({
+		status: status as TicketStatus,
+		createdAt: { $gte: startDate }
+	});
+
+	const csvData: string = await generateCSVReport(
+		['author', 'content', 'title', 'status', 'createdAt'],
+		tickets
+	);
+
+	const fileName = `Report-${new Date().toISOString()}.csv`;
+	return { fileName, csvData };
+}
+
 export default {
 	createTicket,
 	getAllTickets,
 	getTicketById,
 	updateTicketStatus,
 	addCommentToTicket,
-	getAllCommentsOnATicket
+	getAllCommentsOnATicket,
+	generateTicketReport
 };
