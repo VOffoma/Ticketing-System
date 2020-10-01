@@ -2,7 +2,7 @@ import createError from 'http-errors';
 import TicketModel from './ticket.model';
 import { Comment } from '../comments/comment.model';
 import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
-import generateCSVReport from '../../utils/generateCSVReport';
+import generateCSVReport from '../../../utils/generateCSVReport';
 
 async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);

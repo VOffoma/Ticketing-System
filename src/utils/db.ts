@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-import config from '../../config';
-import logger from '../utils/logger';
+import config from '../config';
+import logger from './logger';
 
 mongoose.Promise = global.Promise;
 

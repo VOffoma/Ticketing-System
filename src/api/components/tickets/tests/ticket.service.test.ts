@@ -1,5 +1,5 @@
 import ticketService from '../ticket.service';
-import db from '../../../utils/db';
+import db from '../../../../utils/db';
 
 // beforeAll(async () => {
 // 	await db.open();

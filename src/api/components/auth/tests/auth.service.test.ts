@@ -1,6 +1,6 @@
 import { registerDummyUser, createDummyUser, createDummyCredentials } from './dummyData';
 import authService from '../auth.service';
-import db from '../../../utils/db';
+import db from '../../../../utils/db';
 
 beforeAll(async () => {
 	await db.open();

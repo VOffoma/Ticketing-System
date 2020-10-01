@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import app from './api/app';
-import logger from './api/utils/logger';
-import db from './api/utils/db';
+import logger from './utils/logger';
+import db from './utils/db';
 
 function startServer() {
 	db.open().then(() => {
