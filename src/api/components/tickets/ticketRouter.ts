@@ -62,7 +62,6 @@ ticketRoutes.post(
 ticketRoutes.get(
 	'/',
 	verifyAuthentication,
-	grantAccess('readAny', 'ticket'),
 	asyncHandler(async (request: Request, response: Response) => {
 		const { _id, role } = request.currentUser;
 		const tickets = await ticketService.getAllTickets(_id, role);
