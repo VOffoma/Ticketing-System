@@ -4,6 +4,11 @@ import { Comment } from '../comments/comment.model';
 import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
 import generateCSVReport from '../../../utils/generateCSVReport';
 
+/**
+ *
+ * @param ticketDetails
+ * @returns a object containing the newly created ticket
+ */
 async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);
 	const savedTicket = await createdTicket.save();
@@ -11,11 +16,19 @@ async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 	return savedTicket;
 }
 
+/**
+ * @returns array of all available tickets
+ */
 async function getAllTickets(): Promise<Array<Ticket>> {
 	const tickets = await TicketModel.find();
 	return tickets;
 }
 
+/**
+ *
+ * @param ticketId
+ * @returns a single ticket object
+ */
 async function getTicketById(ticketId: string): Promise<Ticket | null> {
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
@@ -24,6 +37,11 @@ async function getTicketById(ticketId: string): Promise<Ticket | null> {
 	return ticket;
 }
 
+/**
+ *
+ * @param ticketUpdate object containing ticketId and future status
+ * @returns an object containing the updated ticket information
+ */
 async function updateTicketStatus(ticketUpdate: {
 	Id: string;
 	updatedStatus: string;
@@ -40,11 +58,21 @@ async function updateTicketStatus(ticketUpdate: {
 	return ticket;
 }
 
+/**
+ *
+ * @param ticketId
+ * @returns an array of comments with the passed ticketId
+ */
 async function getAllCommentsOnATicket(ticketId) {
 	const comments = await Comment.find({ ticketId: ticketId });
 	return comments;
 }
 
+/**
+ *
+ * @param commentDetails which contains content, ticketId and comentAuthor's id
+ * @returns an object containing the new comment
+ */
 async function addCommentToTicket(commentDetails) {
 	const { ticketId } = commentDetails;
 	const ticket = await TicketModel.findById(ticketId);
@@ -56,6 +84,9 @@ async function addCommentToTicket(commentDetails) {
 	return savedComment;
 }
 
+/**
+ * @returns csv containing a report of tickets closed in the last 30 days
+ */
 async function generateTicketReport(): Promise<Record<string, string>> {
 	const today = new Date();
 	const startDate = today.getDate() - 30;

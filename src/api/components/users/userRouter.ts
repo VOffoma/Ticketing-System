@@ -6,6 +6,10 @@ import verifyAuthentication from '../../middleware/verifyAuthentication';
 
 const userRouter = Router();
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/users/updateUserRole
+ * @description This endpoint exposes the functionality for updating the role of a user
+ */
 userRouter.patch(
 	'/updateUserRole',
 	verifyAuthentication,
@@ -16,6 +20,10 @@ userRouter.patch(
 	})
 );
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/users/assignTicket
+ * @description This endpoint exposes the functionality for assigning a ticket to a support person
+ */
 userRouter.patch(
 	'/assignTicket',
 	verifyAuthentication,

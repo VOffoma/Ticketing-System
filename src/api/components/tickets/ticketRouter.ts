@@ -9,12 +9,20 @@ import ticketService from './ticket.service';
 
 const ticketRoutes = Router();
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/report
+ * @description This endpoint exposes the functionality for getting a report of tickets closed in the last 30 days
+ */
 ticketRoutes.get('/report', verifyAuthentication, async (request: Request, response: Response) => {
 	const report = await ticketService.generateTicketReport();
 	response.header('Content-Type', 'text/csv');
 	return response.attachment(report.fileName).send(report.csvData);
 });
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketId/comments
+ * @description This endpoint exposes the functionality for getting all comments made on a ticket
+ */
 ticketRoutes.get(
 	'/:ticketId/comments',
 	verifyAuthentication,
@@ -24,6 +32,11 @@ ticketRoutes.get(
 		response.status(200).send(comments);
 	})
 );
+
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketId/comments
+ * @description This endpoint exposes the functionality for adding a comment to a ticket
+ */
 
 ticketRoutes.post(
 	'/:ticketId/comments',
@@ -38,6 +51,11 @@ ticketRoutes.post(
 		response.status(201).send(savedComment);
 	})
 );
+
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/
+ * @description This endpoint exposes the functionality for fetching all tickets
+ */
 ticketRoutes.get(
 	'/',
 	verifyAuthentication,
@@ -48,6 +66,10 @@ ticketRoutes.get(
 	})
 );
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/
+ * @description This endpoint exposes the functionality for creating a new ticket
+ */
 ticketRoutes.post(
 	'/',
 	verifyAuthentication,
@@ -60,6 +82,10 @@ ticketRoutes.post(
 	})
 );
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid
+ * @description This endpoint exposes the functionality for getting a single ticket
+ */
 ticketRoutes.get(
 	'/:ticketId',
 	verifyAuthentication,
@@ -70,6 +96,11 @@ ticketRoutes.get(
 		return response.status(200).send(ticket);
 	})
 );
+
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid
+ * @description This endpoint exposes the functionality for updating the status of a ticket
+ */
 
 ticketRoutes.patch(
 	'/:ticketId',

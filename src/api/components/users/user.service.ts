@@ -3,6 +3,11 @@ import { User } from './user.model';
 import { UserRole } from './user.interface';
 import TicketModel from '../tickets/ticket.model';
 
+/**
+ *
+ * @param roleUpdate which contains userId and the future role
+ * @returns an object containing the updated user information
+ */
 async function updateUserRole(roleUpdate) {
 	const { userId, newRole } = roleUpdate;
 
@@ -18,6 +23,11 @@ async function updateUserRole(roleUpdate) {
 	return updatedUser;
 }
 
+/**
+ *
+ * @param ticketAssignment whichs the ticketId and id of the support person who is to handle the ticket
+ * @returns an object containing the updated ticket information
+ */
 async function assignTicketToSupport(ticketAssignment) {
 	const { ticketId, supportPersonId } = ticketAssignment;
 

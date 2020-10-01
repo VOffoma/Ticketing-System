@@ -5,6 +5,10 @@ import { UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
 
 const authRouter = Router();
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/auth/signup
+ * @description This endpoint exposes the functionality for registering a user
+ */
 authRouter.post(
 	'/signup',
 	asyncHandler(async (request: Request, response: Response) => {
@@ -14,6 +18,10 @@ authRouter.post(
 	})
 );
 
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/auth/signin
+ * @description This endpoint exposes the functionality for authenticating a user
+ */
 authRouter.post(
 	'/signin',
 	asyncHandler(async (request: Request, response: Response) => {

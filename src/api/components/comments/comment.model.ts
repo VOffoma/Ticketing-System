@@ -29,6 +29,9 @@ commentSchema.statics.saveComment = async function (
 	const { ticketId } = commentInput;
 	const comment = await this.findOne({ ticketId });
 
+	// Here we are trying to ensure that a customer can only comment on a ticket
+	//if and only if a support agent has commented on the ticket.
+	// We do this by checking that the first comment to be added to the ticket is not from the ticket's author
 	if (!comment && ticketAuthor.equals(commentInput.commentAuthor)) {
 		throw createError(
 			'400',

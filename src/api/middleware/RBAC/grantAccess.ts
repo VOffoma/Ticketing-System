@@ -2,6 +2,12 @@ import createError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
 import roles from './roles';
 
+/**
+ *
+ * @param action
+ * @param resource
+ * @description this middleware implements Role based access control
+ */
 function grantAccess(action: string, resource: string) {
 	return async (request: Request, response: Response, next: NextFunction) => {
 		try {
