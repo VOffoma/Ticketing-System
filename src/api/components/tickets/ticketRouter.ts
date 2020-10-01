@@ -54,14 +54,18 @@ ticketRoutes.post(
 
 /**
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/
- * @description This endpoint exposes the functionality for fetching all tickets
+ * @description This endpoint exposes the functionality for fetching tickets
+ * A user would only see tickets he or she created over time
+ * A supportperson would only see all tickets assigned to him or her
+ * The admin will see all tickets
  */
 ticketRoutes.get(
 	'/',
 	verifyAuthentication,
 	grantAccess('readAny', 'ticket'),
 	asyncHandler(async (request: Request, response: Response) => {
-		const tickets = await ticketService.getAllTickets();
+		const { _id, role } = request.currentUser;
+		const tickets = await ticketService.getAllTickets(_id, role);
 		response.status(200).send(tickets);
 	})
 );

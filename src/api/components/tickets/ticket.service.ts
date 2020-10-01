@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import TicketModel from './ticket.model';
 import { Comment } from '../comments/comment.model';
+import { UserRole } from '../users/user.interface';
 import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
 import generateCSVReport from '../../../utils/generateCSVReport';
 
@@ -17,10 +18,38 @@ async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 }
 
 /**
- * @returns array of all available tickets
+ * @returns array of an array of tickets depending on the role of the requesting user
  */
-async function getAllTickets(): Promise<Array<Ticket>> {
-	const tickets = await TicketModel.find();
+async function getAllTickets(userId, role): Promise<Array<Ticket>> {
+	const userRole = role as UserRole;
+	let tickets;
+	if (userRole === UserRole.USER) {
+		tickets = await getAllTicketsForUser(userId);
+	} else if (userRole == UserRole.SUPPORT) {
+		tickets = await getAllTicketsForSupportPerson(userId);
+	} else {
+		const tickets = await TicketModel.find();
+	}
+	return tickets;
+}
+
+/**
+ *
+ * @param userId
+ * @returns an array of tickets by a specific user
+ */
+async function getAllTicketsForUser(userId) {
+	const tickets = await TicketModel.find({ author: userId });
+	return tickets;
+}
+
+/**
+ *
+ * @param userId
+ * @returns an array of tickets assigned to a suppport person
+ */
+async function getAllTicketsForSupportPerson(userId) {
+	const tickets = await TicketModel.find({ supportPerson: userId });
 	return tickets;
 }
 
