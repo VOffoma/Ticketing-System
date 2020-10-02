@@ -28,7 +28,7 @@ async function getAllTickets(userId, role): Promise<Array<Ticket>> {
 	} else if (userRole == UserRole.SUPPORT) {
 		tickets = await getAllTicketsForSupportPerson(userId);
 	} else {
-		const tickets = await TicketModel.find();
+		tickets = await TicketModel.find();
 	}
 	return tickets;
 }
@@ -93,6 +93,10 @@ async function updateTicketStatus(ticketUpdate: {
  * @returns an array of comments with the passed ticketId
  */
 async function getAllCommentsOnATicket(ticketId) {
+	const ticket = await TicketModel.findById(ticketId);
+	if (!ticket) {
+		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+	}
 	const comments = await Comment.find({ ticketId: ticketId });
 	return comments;
 }
@@ -100,13 +104,20 @@ async function getAllCommentsOnATicket(ticketId) {
 /**
  *
  * @param commentDetails which contains content, ticketId and comentAuthor's id
+ * @param currentUserRole
  * @returns an object containing the new comment
  */
-async function addCommentToTicket(commentDetails) {
+async function addCommentToTicket(commentDetails, currentUserRole) {
 	const { ticketId } = commentDetails;
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
 		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+	}
+	if (!ticket.author.equals(commentDetails.commentAuthor) && currentUserRole === UserRole.USER) {
+		throw createError(
+			403,
+			`You need to be the owner of the ticket or a support person to be able to comment`
+		);
 	}
 
 	const savedComment = Comment.saveComment(ticket.author, commentDetails);

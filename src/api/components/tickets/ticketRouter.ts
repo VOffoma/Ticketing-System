@@ -43,11 +43,14 @@ ticketRoutes.post(
 	verifyAuthentication,
 	grantAccess('createOwn', 'comment'),
 	asyncHandler(async (request: Request, response: Response) => {
-		const savedComment = await ticketService.addCommentToTicket({
-			commentAuthor: request.currentUser._id,
-			content: request.body.content,
-			ticketId: request.params.ticketId
-		});
+		const savedComment = await ticketService.addCommentToTicket(
+			{
+				commentAuthor: request.currentUser._id,
+				content: request.body.content,
+				ticketId: request.params.ticketId
+			},
+			request.currentUser.role
+		);
 		response.status(201).send(savedComment);
 	})
 );

@@ -1,0 +1,49 @@
+[{
+  "_id": {
+    "$oid": "5f7717340abc3b8277af28b4"
+  },
+  "role": "USER",
+  "firstName": "Sarah",
+  "lastName": "Sandals",
+  "email": "sarah.sandals@gmail.com",
+  "password": "$2b$10$qF2jWvbxWv.Yb3C8PisUpOyeh0a7yhU/LLBm41efaKGV4bWKRr3f6",
+  "createdAt": {
+    "$date": "2020-10-02T12:04:04.506Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T12:04:04.506Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5f773ffc4386b590cccb8cf1"
+  },
+  "role": "SUPPORT",
+  "firstName": "Ben",
+  "lastName": "Bench",
+  "email": "ben.bench@gmail.com",
+  "password": "$2b$10$GNieuFfAPIajSAcldWdQsuylVmbiKZA5Mz0l4SAwI.Pq6Z2YBRx0C",
+  "createdAt": {
+    "$date": "2020-10-02T14:58:04.437Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T14:58:04.437Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5f7762e4151032a0afa91f58"
+  },
+  "role": "ADMIN",
+  "firstName": "Mike",
+  "lastName": "Miles",
+  "email": "mike.mikes@gmail.com",
+  "password": "$2b$10$Qd/zqnipV.Pujs/BV1oLpupUidjCUPzoQExJCP8KgFefbr4SKgYvq",
+  "createdAt": {
+    "$date": "2020-10-02T17:27:00.431Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T17:27:00.431Z"
+  },
+  "__v": 0
+}]
