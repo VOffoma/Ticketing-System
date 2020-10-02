@@ -21,7 +21,7 @@ Apart from the scripts for running the application, there are scripts that do ot
 
 * `npm run jest:test` - this script is responsible for running tests
 * `npm run jest:test:coverage` - this script is responsible for running tests and generating coverage reports
-* `npm run generate:tsdoc` - This script is responsible for generating some documentations on the methods, functions and interfaces in this project
+* `npm run generate:tsdoc` - This script is responsible for generating some documentations on the methods, functions and interfaces in this project. This script generates a folder call docs in the root of the project. There is an index.html document you can access in it. 
 
 ## Endpoints
 
@@ -69,3 +69,6 @@ This user has all the ability of the above stated category and the following bel
     * A user would only see tickets he or she created over time
     * A supportperson would only see all tickets assigned to him or her
     * The admin will see all tickets
+
+## Requirements that was not covered
+* Sadly, I was unable to write enough test. 
