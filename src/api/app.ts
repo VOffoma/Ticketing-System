@@ -25,8 +25,8 @@ app.use((error, request: Request, response: Response, next: NextFunction) => {
 	}
 	response.status(error.status || error.statusCode || 500);
 	response.json({
-		message: validationErrorMessage || error.message,
-		stack: error.stack
+		message: validationErrorMessage || error.message
+		//stack: error.stack
 	});
 });
 

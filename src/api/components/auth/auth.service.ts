@@ -7,9 +7,9 @@ import { UserBase, UserInputDTO, UserCredentialsDTO } from '../users/user.interf
  * @returns a new user object
  */
 async function registerUser(userDetails: UserInputDTO): Promise<UserBase> {
-	const user = new User(userDetails);
-	const newUser = await user.save();
-	return newUser;
+	const createdUser = new User(userDetails);
+	const registeredUser = await createdUser.save();
+	return registeredUser;
 }
 
 /**
