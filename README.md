@@ -78,6 +78,8 @@ This user has all the ability of the above stated category and the following bel
 * Some functionality can refactored into other functions or middleware e.g the check for the existence of a ticket. 
 * An ordinary user should not be able to see a ticket for another user unless the This should only be available to the support and admin user.
 * An ordinary user should not be able see to comments for a ticket that he or she did not create.
+* better validation and validation messages
+* More uses of types on arguments and return values. 
 
 ### Issues faces: 
 No technical issues. 
