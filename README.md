@@ -71,7 +71,14 @@ This user has all the ability of the above stated category and the following bel
     * The admin will see all tickets
 
 ## Note
-* Requirements unmet: not enough tests. 
-* Issues faces: No technical issues
-* Feedback: None for now
+### Requirements unmet: 
+* Not enough tests. 
+* Some functionality can refactored into other functions or middleware e.g the check for the existence of a ticket. 
+* An ordinary user should not be able to see a ticket for another user unless the This should only be available to the support and admin user.
+* An ordinary user should not be able see to comments for a ticket that he or she did not create.
+
+### Issues faces: 
+No technical issues. 
+### Feedback
+None for now
 
