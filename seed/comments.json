@@ -1,0 +1,37 @@
+[{
+  "_id": {
+    "$oid": "5f77741b349204a6b91c1736"
+  },
+  "commentAuthor": {
+    "$oid": "5f776f8eda128aa5bbac4e9d"
+  },
+  "content": "Kindly bear with us as we work to resolve your complaint",
+  "ticketId": {
+    "$oid": "5f7764c2151032a0afa91f59"
+  },
+  "createdAt": {
+    "$date": "2020-10-02T18:40:27.322Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T18:40:27.322Z"
+  },
+  "__v": 0
+},{
+  "_id": {
+    "$oid": "5f777640349204a6b91c1737"
+  },
+  "commentAuthor": {
+    "$oid": "5f7717340abc3b8277af28b4"
+  },
+  "content": "I will be waiting for your response",
+  "ticketId": {
+    "$oid": "5f7764c2151032a0afa91f59"
+  },
+  "createdAt": {
+    "$date": "2020-10-02T18:49:36.259Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T18:49:36.259Z"
+  },
+  "__v": 0
+}]

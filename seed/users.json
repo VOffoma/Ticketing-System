@@ -46,4 +46,20 @@
     "$date": "2020-10-02T17:27:00.431Z"
   },
   "__v": 0
+},{
+  "_id": {
+    "$oid": "5f776f8eda128aa5bbac4e9d"
+  },
+  "role": "SUPPORT",
+  "firstName": "Sloane",
+  "lastName": "Stone",
+  "email": "sloane.stone@gmail.com",
+  "password": "$2b$10$mSBYg1WeIyb1Ee2wH3Pn9e3qUP04u6ftc7xkfYOZBPeg7.dj00rkG",
+  "createdAt": {
+    "$date": "2020-10-02T18:21:02.400Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T18:34:02.003Z"
+  },
+  "__v": 0
 }]

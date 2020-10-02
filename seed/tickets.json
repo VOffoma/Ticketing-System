@@ -1,0 +1,38 @@
+[{
+  "_id": {
+    "$oid": "5f7764c2151032a0afa91f59"
+  },
+  "status": "INPROGRESS",
+  "title": "Est deleniti ut pariatur enim veniam laboriosam rerum doloribus.",
+  "content": "Et ut ex vel reiciendis aut. Consequatur at perferendis commodi beatae. Quasi molestias aut nesciunt tempore sit dolorem.",
+  "author": {
+    "$oid": "5f7717340abc3b8277af28b4"
+  },
+  "createdAt": {
+    "$date": "2020-10-02T17:34:58.300Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T18:35:49.482Z"
+  },
+  "__v": 0,
+  "supportPerson": {
+    "$oid": "5f776f8eda128aa5bbac4e9d"
+  }
+},{
+  "_id": {
+    "$oid": "5f776540151032a0afa91f5b"
+  },
+  "status": "OPEN",
+  "title": "Magnam enim id aperiam modi est.",
+  "content": "Accusantium non et aut aut id soluta totam ut dolor. Temporibus distinctio voluptatibus doloremque expedita sint eaque. Laboriosam eum molestiae aut sint dignissimos debitis.",
+  "author": {
+    "$oid": "5f7717340abc3b8277af28b4"
+  },
+  "createdAt": {
+    "$date": "2020-10-02T17:37:04.418Z"
+  },
+  "updatedAt": {
+    "$date": "2020-10-02T17:37:04.418Z"
+  },
+  "__v": 0
+}]
