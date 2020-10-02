@@ -42,7 +42,7 @@ The endpoints on the app are:
 | POST: `http://localhost:7077/api/v1/users/assignTicket` | assign tickets to support persons |
 
 
-## Functionality
+## Functionality covered
 This application has 3 different categories of users and the category is determined by the role of the user. There are three roles: USER, SUPPORT and ADMIN.
 
 ### Functionality available to the users with role of "USER"
@@ -70,5 +70,8 @@ This user has all the ability of the above stated category and the following bel
     * A supportperson would only see all tickets assigned to him or her
     * The admin will see all tickets
 
-## Requirements that was not covered
-* Sadly, I was unable to write enough test. 
+## Note
+* Requirements unmet: not enough tests. 
+* Issues faces: No technical issues
+* Feedback: None for now
+
