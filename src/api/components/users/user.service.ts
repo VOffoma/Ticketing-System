@@ -18,7 +18,11 @@ async function updateUserRole(roleUpdate) {
 
 	const role = newRole as UserRole;
 
-	const updatedUser = await User.findByIdAndUpdate({ _id: userId }, { role }, { new: true });
+	const updatedUser = await User.findByIdAndUpdate(
+		{ _id: userId },
+		{ role },
+		{ new: true, runValidators: true }
+	);
 
 	return updatedUser;
 }
@@ -48,7 +52,7 @@ async function assignTicketToSupport(ticketAssignment) {
 	const updatedTicket = await TicketModel.findByIdAndUpdate(
 		{ _id: ticketId },
 		{ supportPerson: supportPersonId },
-		{ new: true }
+		{ new: true, runValidators: true }
 	);
 
 	return updatedTicket;

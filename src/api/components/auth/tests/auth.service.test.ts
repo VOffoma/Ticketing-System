@@ -13,17 +13,9 @@ afterAll(async () => {
 
 describe('AuthService', () => {
 	describe('authenticateUser', () => {
-		it.skip('should return JWT token to a valid login credentials', async () => {
-			//const dummyUser = await createDummyUser();
-			//console.log(dummyUser);
-			const dummyUser = {
-				firstName: 'zinne',
-				lastName: 'offoma',
-				email: 'offoma.zinne@gmail.com',
-				password: 'helloworld.1'
-			};
+		it('should return JWT token to a valid login credentials', async () => {
+			const dummyUser = createDummyUser();
 			const dummyCredentials = { email: dummyUser.email, password: dummyUser.password };
-			console.log(dummyCredentials);
 			await registerDummyUser(dummyUser);
 
 			await expect(authService.authenticateUser(dummyCredentials)).resolves.toHaveProperty(

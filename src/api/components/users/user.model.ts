@@ -15,7 +15,7 @@ const userSchema = new Schema(
 			type: String,
 			required: [true, 'Please provide firstname'],
 			match: [
-				/^[a-zA-Z(-)*]+$/,
+				/^[a-zA-Z ,.'-]+$/,
 				'A valid username is made of letters and the special character -'
 			],
 			minlength: [2, 'Your firstname should be atleast 2 characters']
@@ -24,7 +24,7 @@ const userSchema = new Schema(
 			type: String,
 			required: [true, 'Please provide lastname'],
 			match: [
-				/^[a-zA-Z(-)*]+$/,
+				/^[a-zA-Z ,.'-]+$/,
 				'A valid lastname is made of letters and the special character -'
 			],
 			minlength: [2, 'Your lastname should be atleast 2 characters']
@@ -66,7 +66,6 @@ userSchema.set('toJSON', {
 		delete ret.createdAt;
 		delete ret.updatedAt;
 		delete ret.__v;
-		delete ret._id;
 		delete ret.password;
 	}
 });

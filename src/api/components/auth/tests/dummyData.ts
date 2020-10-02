@@ -1,9 +1,6 @@
 import faker from 'faker';
 import { User } from '../../users/user.model';
 
-type SavedDummyUser = { email: string; role: string; firstName: string; lastName };
-type DummyUser = { email: string; password: string; firstName: string; lastName };
-
 export function createDummyUser() {
 	return {
 		email: faker.internet.email(),
@@ -20,9 +17,8 @@ export function createDummyCredentials() {
 	};
 }
 
-export async function registerDummyUser(dummyUser: DummyUser): Promise<SavedDummyUser> {
-	const user = createDummyUser();
-	const dbUser = new User(user);
+export async function registerDummyUser(dummyUser) {
+	const dbUser = new User(dummyUser);
 	const savedUser = await dbUser.save();
 	return savedUser;
 }
