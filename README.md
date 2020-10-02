@@ -23,7 +23,7 @@ Apart from the scripts for running the application, there are scripts that do ot
 * `npm run jest:test:coverage` - this script is responsible for running tests and generating coverage reports
 * `npm run generate:tsdoc` - This script is responsible for generating some documentations on the methods, functions and interfaces in this project
 
-## Endpoints and Resources
+## Endpoints
 
 The endpoints on the app are:
 
@@ -41,7 +41,8 @@ The endpoints on the app are:
 | POST: `http://localhost:7077/api/v1/users/updateUserRole` | update a user's role |
 | POST: `http://localhost:7077/api/v1/users/assignTicket` | assign tickets to support persons |
 
-## 
+
+## Functionality
 This application has 3 different categories of users and the category is determined by the role of the user. There are three roles: USER, SUPPORT and ADMIN.
 
 ### Functionality available to the users with role of "USER"
