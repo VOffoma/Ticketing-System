@@ -1,32 +1,36 @@
 import { Router, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { validate } from 'express-validation';
-import grantAccess from '../../middleware/RBAC/grantAccess';
-import verifyAuthentication from '../../middleware/verifyAuthentication';
+import verifyAuthentication from '../../middlewares/verifyAuthentication.middleware';
+import verifyRole from '../../middlewares/access-control/verifyRole.middleware';
 import validationRules from './ticket.validationRules';
 import { TicketInputDTO } from './ticket.interface';
 import ticketService from './ticket.service';
 
-const ticketRoutes = Router();
+const ticketRouter = Router();
+
+ticketRouter.use(verifyAuthentication);
 
 /**
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/report
  * @description This endpoint exposes the functionality for getting a report of tickets closed in the last 30 days
  */
-ticketRoutes.get('/report', verifyAuthentication, async (request: Request, response: Response) => {
-	const report = await ticketService.generateTicketReport();
-	response.header('Content-Type', 'text/csv');
-	return response.attachment(report.fileName).send(report.csvData);
-});
+ticketRouter.get(
+	'/report',
+	verifyRole(['ADMIN', 'SUPPORT']),
+	async (request: Request, response: Response) => {
+		const report = await ticketService.generateTicketReport();
+		response.header('Content-Type', 'text/csv');
+		return response.attachment(report.fileName).send(report.csvData);
+	}
+);
 
 /**
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketId/comments
  * @description This endpoint exposes the functionality for getting all comments made on a ticket
  */
-ticketRoutes.get(
+ticketRouter.get(
 	'/:ticketId/comments',
-	verifyAuthentication,
-	grantAccess('readAny', 'comment'),
 	asyncHandler(async (request: Request, response: Response) => {
 		const comments = await ticketService.getAllCommentsOnATicket(request.params.ticketId);
 		response.status(200).send(comments);
@@ -38,10 +42,8 @@ ticketRoutes.get(
  * @description This endpoint exposes the functionality for adding a comment to a ticket
  */
 
-ticketRoutes.post(
+ticketRouter.post(
 	'/:ticketId/comments',
-	verifyAuthentication,
-	grantAccess('createOwn', 'comment'),
 	asyncHandler(async (request: Request, response: Response) => {
 		const savedComment = await ticketService.addCommentToTicket(
 			{
@@ -62,9 +64,8 @@ ticketRoutes.post(
  * A supportperson would only see all tickets assigned to him or her
  * The admin will see all tickets
  */
-ticketRoutes.get(
+ticketRouter.get(
 	'/',
-	verifyAuthentication,
 	asyncHandler(async (request: Request, response: Response) => {
 		const { _id, role } = request.currentUser;
 		const tickets = await ticketService.getAllTickets(_id, role);
@@ -76,10 +77,8 @@ ticketRoutes.get(
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/
  * @description This endpoint exposes the functionality for creating a new ticket
  */
-ticketRoutes.post(
+ticketRouter.post(
 	'/',
-	verifyAuthentication,
-	grantAccess('createOwn', 'ticket'),
 	validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const ticketDetails: TicketInputDTO = { ...request.body, author: request.currentUser._id };
@@ -92,10 +91,8 @@ ticketRoutes.post(
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid
  * @description This endpoint exposes the functionality for getting a single ticket
  */
-ticketRoutes.get(
+ticketRouter.get(
 	'/:ticketId',
-	verifyAuthentication,
-	grantAccess('readOwn', 'ticket'),
 	validate(validationRules.ticketId, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const ticket = await ticketService.getTicketById(request.params.ticketId);
@@ -108,10 +105,9 @@ ticketRoutes.get(
  * @description This endpoint exposes the functionality for updating the status of a ticket
  */
 
-ticketRoutes.patch(
+ticketRouter.patch(
 	'/:ticketId',
-	verifyAuthentication,
-	grantAccess('updateAny', 'ticket'),
+	verifyRole(['ADMIN', 'SUPPORT']),
 	validate(validationRules.ticketUpdate, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const update = { Id: request.params.ticketId, updatedStatus: request.body.status };
@@ -120,4 +116,4 @@ ticketRoutes.patch(
 	})
 );
 
-export default ticketRoutes;
+export default ticketRouter;

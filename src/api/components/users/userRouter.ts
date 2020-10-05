@@ -1,12 +1,14 @@
 import { Router, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
 import { validate } from 'express-validation';
-import grantAccess from '../../middleware/RBAC/grantAccess';
-import verifyAuthentication from '../../middleware/verifyAuthentication';
+import verifyAuthentication from '../../middlewares/verifyAuthentication.middleware';
+import verifyRole from '../../middlewares/access-control/verifyRole.middleware';
 import userService from './user.service';
 import validationRules from './user.validationRules';
 
 const userRouter = Router();
+
+userRouter.use(verifyAuthentication);
 
 /**
  * Endpoint: http://localhost:{{port}}/api/v1/users/updateUserRole
@@ -14,8 +16,7 @@ const userRouter = Router();
  */
 userRouter.patch(
 	'/updateUserRole',
-	verifyAuthentication,
-	grantAccess('updateAny', 'user'),
+	verifyRole(['ADMIN']),
 	validate(validationRules.roleUpdate, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const result = await userService.updateUserRole(request.body);
@@ -29,8 +30,7 @@ userRouter.patch(
  */
 userRouter.patch(
 	'/assignTicket',
-	verifyAuthentication,
-	grantAccess('updateAny', 'ticket'),
+	verifyRole(['ADMIN', 'SUPPORT']),
 	validate(validationRules.ticketAssignment, { statusCode: 422, keyByField: true }, {}),
 	asyncHandler(async (request: Request, response: Response) => {
 		const result = await userService.assignTicketToSupport(request.body);

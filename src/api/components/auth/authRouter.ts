@@ -4,6 +4,7 @@ import { validate } from 'express-validation';
 import authService from './auth.service';
 import { UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
 import validationRules from '../users/user.validationRules';
+import { nextTick } from 'process';
 
 const authRouter = Router();
 
