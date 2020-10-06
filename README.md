@@ -5,13 +5,14 @@ This project is a backend implementation for a customer support ticketing system
 ---
 ## Requirements
 
-You would not be needing much to run this application, Simply ensure that you have the most recent stable version of Node.js. While this application makes use of the mongodb, this application makes use of a database instance in Mongodb altas so you are good to go.
+* NodeJS: Simply ensure that you have the most recent stable version of Node.js. 
+* MongoDB Compass: This application makes use of a database instance in Mongodb altas. The link to the database is in the .env.dev and .env.prod files.
 
 ## How to setup and run the application
 To setup the application, Kindly do the following
 
-    $ git clone https://github.com/YOUR_USERNAME/PROJECT_TITLE
-    $ cd PROJECT_TITLE
+    $ git clone https://github.com/VOffoma/Ticketing-System
+    $ cd Ticketing-System
     $ npm install or yarn install
     $ npm run start:dev (to run in dev mode)
     $ npm run start (to run in prod)
@@ -21,7 +22,7 @@ Apart from the scripts for running the application, there are scripts that do ot
 
 * `npm run jest:test` - this script is responsible for running tests
 * `npm run jest:test:coverage` - this script is responsible for running tests and generating coverage reports
-* `npm run generate:tsdoc` - This script is responsible for generating some documentations on the methods, functions and interfaces in this project. This script generates a folder call docs in the root of the project. There is an index.html document you can access in it. 
+* `npm run generate:tsdoc` - This script is responsible for generating some documentations on the methods, functions and interfaces in this project. This script generates a folder call docs in the root of the project. There is an index.html document in the docs folder that you can access. 
 
 ## Endpoints
 
@@ -41,6 +42,7 @@ The endpoints on the app are:
 | POST: `http://localhost:7077/api/v1/users/updateUserRole` | update a user's role |
 | POST: `http://localhost:7077/api/v1/users/assignTicket` | assign tickets to support persons |
 
+Note: All routes excepts for the routes for signin and signup are protected. Ensure the token you recieved after signin is sent back in the header 'x-access-token' when trying to access protected routes. 
 
 ## Functionality covered
 This application has 3 different categories of users and the category is determined by the role of the user. There are three roles: USER, SUPPORT and ADMIN.
@@ -76,6 +78,8 @@ This user has all the ability of the above stated category and the following bel
 * Some functionality can refactored into other functions or middleware e.g the check for the existence of a ticket. 
 * An ordinary user should not be able to see a ticket for another user unless the This should only be available to the support and admin user.
 * An ordinary user should not be able see to comments for a ticket that he or she did not create.
+* better validation and validation messages
+* More uses of types on arguments and return values. 
 
 ### Issues faces: 
 No technical issues. 
