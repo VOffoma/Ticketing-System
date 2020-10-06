@@ -17,6 +17,8 @@ async function getAllCommentsOnATicket(
 		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
 	}
 
+	// This check below prevent a user who is not the ticket author or a support person or admin
+	// from accessing this information
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw createError(403, "You don't have enough permission to perform this action");
 	}
@@ -40,6 +42,8 @@ async function addCommentToTicket(
 		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
 	}
 
+	// This check below prevent a user who is not the ticket author or a support person or admin
+	// from accessing this information
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw createError(403, "You don't have enough permission to perform this action");
 	}
