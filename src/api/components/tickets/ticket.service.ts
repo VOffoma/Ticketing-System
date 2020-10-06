@@ -70,6 +70,7 @@ async function getAllTicketsForAdmin(): Promise<Array<Ticket>> {
 /**
  *
  * @param ticketId
+ * @param currentUser
  * @returns a single ticket object
  */
 async function getTicketById(ticketId: string, currentUser: CurrentUser): Promise<Ticket | null> {
@@ -95,7 +96,7 @@ async function getTicketById(ticketId: string, currentUser: CurrentUser): Promis
 
 /**
  *
- * @param ticketUpdate object containing ticketId and future status
+ * @param status
  * @returns an object containing the updated ticket information
  */
 async function updateTicketStatus(ticketId: string, status: string): Promise<Ticket | null> {
@@ -119,7 +120,7 @@ async function updateTicketStatus(ticketId: string, status: string): Promise<Tic
 
 /**
  *
- * @param ticketUpdate object containing ticketId and future status
+ * @param supportPersonId
  * @returns an object containing the updated ticket information
  */
 async function assignSupport(ticketId: string, supportPersonId: string): Promise<Ticket | null> {
