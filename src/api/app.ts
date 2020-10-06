@@ -1,7 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import createError from 'http-errors';
-import { ValidationError } from 'express-validation';
 import routes from './components/routes';
 
 const app: express.Application = express();
@@ -17,15 +16,10 @@ app.use((request: Request, response: Response, next: NextFunction) => {
 });
 
 app.use((error, request: Request, response: Response, next: NextFunction) => {
-	let validationErrorMessage;
-	if (error instanceof ValidationError) {
-		const validationErrorDetails = error.details[0];
-		const validationErrorKey = Object.keys(validationErrorDetails)[0];
-		validationErrorMessage = validationErrorDetails[validationErrorKey];
-	}
+	console.log(error);
 	response.status(error.status || error.statusCode || 500);
 	response.json({
-		message: validationErrorMessage || error.message
+		message: error.message
 		//stack: error.stack
 	});
 });

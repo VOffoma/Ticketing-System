@@ -1,8 +1,9 @@
 import createError from 'http-errors';
-import TicketModel from './ticket.model';
-import { Comment } from '../comments/comment.model';
+import { Comment, CommentDocument } from '../comments/comment.model';
 import { UserRole } from '../users/user.interface';
-import { TicketInputDTO, Ticket, TicketStatus } from './ticket.interface';
+import { CreateTicketDto, UpdateTicketDto } from './ticket.dto';
+import TicketModel from './ticket.model';
+import { Ticket, TicketStatus } from './ticket.interface';
 import generateCSVReport from '../../../utils/generateCSVReport';
 
 /**
@@ -10,7 +11,7 @@ import generateCSVReport from '../../../utils/generateCSVReport';
  * @param ticketDetails
  * @returns a object containing the newly created ticket
  */
-async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
+async function createTicket(ticketDetails: CreateTicketDto): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);
 	const savedTicket = await createdTicket.save();
 	await savedTicket.populate('author').execPopulate();
@@ -20,13 +21,17 @@ async function createTicket(ticketDetails: TicketInputDTO): Promise<Ticket> {
 /**
  * @returns array of an array of tickets depending on the role of the requesting user
  */
-async function getAllTickets(userId, role): Promise<Array<Ticket>> {
-	const userRole = role as UserRole;
+async function getAllTickets(currentUser: { _id: string; role: string }): Promise<Array<Ticket>> {
+	const userRole = currentUser.role as UserRole;
+	const userId = currentUser._id;
 	let tickets;
+
 	if (userRole === UserRole.USER) {
-		tickets = await getAllTicketsForUser(userId);
+		tickets = await TicketModel.find({ author: userId }).sort({ createdAt: -1 });
 	} else if (userRole == UserRole.SUPPORT) {
-		tickets = await getAllTicketsForSupportPerson();
+		tickets = await TicketModel.find({
+			$or: [{ status: TicketStatus.OPEN }, { status: TicketStatus.INPROGRESS }]
+		}).sort({ createdAt: -1 });
 	} else {
 		tickets = await TicketModel.find().sort({ createdAt: -1 });
 	}
@@ -35,38 +40,18 @@ async function getAllTickets(userId, role): Promise<Array<Ticket>> {
 
 /**
  *
- * @param userId
- * @returns an array of tickets by a specific user
- */
-async function getAllTicketsForUser(userId) {
-	const tickets = await TicketModel.find({ author: userId }).sort({ createdAt: -1 });
-	return tickets;
-}
-
-/**
- *
- * @param userId
- * @returns an array of tickets assigned to a suppport person
- */
-async function getAllTicketsForSupportPerson() {
-	const tickets = await TicketModel.find({
-		$or: [{ status: TicketStatus.OPEN }, { status: TicketStatus.INPROGRESS }]
-	}).sort({ createdAt: -1 });
-
-	return tickets;
-}
-
-/**
- *
  * @param ticketId
  * @returns a single ticket object
  */
-async function getTicketById(ticketId: string, currentUser): Promise<Ticket | null> {
+async function getTicketById(
+	ticketId: string,
+	currentUser: { _id: string; role: string }
+): Promise<Ticket | null> {
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
 		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
 	}
-	if (currentUser.role === UserRole.USER && currentUser._id !== ticket.author) {
+	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw createError(403, "You don't have enough permission to perform this action");
 	}
 
@@ -78,59 +63,16 @@ async function getTicketById(ticketId: string, currentUser): Promise<Ticket | nu
  * @param ticketUpdate object containing ticketId and future status
  * @returns an object containing the updated ticket information
  */
-async function updateTicketStatus(ticketUpdate: {
-	Id: string;
-	updatedStatus: string;
-}): Promise<Ticket | null> {
-	const updatedStatus = ticketUpdate.updatedStatus as TicketStatus;
+async function updateTicket(ticketId: string, ticketUpdate: Ticket): Promise<Ticket | null> {
 	const ticket = await TicketModel.findOneAndUpdate(
-		{ _id: ticketUpdate.Id },
-		{ $set: { status: updatedStatus } },
+		{ _id: ticketId },
+		{ $set: ticketUpdate },
 		{ new: true, runValidators: true }
 	);
 	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketUpdate.Id} does not exist`);
+		throw createError(404, `Ticket with Id ${ticketUpdate._id} does not exist`);
 	}
 	return ticket;
-}
-
-/**
- *
- * @param ticketId
- * @returns an array of comments with the passed ticketId
- */
-async function getAllCommentsOnATicket(ticketId, currentUser) {
-	const ticket = await TicketModel.findById(ticketId);
-	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
-	}
-
-	if (currentUser.role === UserRole.USER && currentUser._id !== ticket.author) {
-		throw createError(403, "You don't have enough permission to perform this action");
-	}
-	const comments = await Comment.find({ ticketId: ticketId }).sort({ createdAt: -1 });
-	return comments;
-}
-
-/**
- *
- * @param commentDetails which contains content, ticketId and comentAuthor's id
- * @param currentUserRole
- * @returns an object containing the new comment
- */
-async function addCommentToTicket(commentDetails, currentUser) {
-	const { ticketId } = commentDetails;
-	const ticket = await TicketModel.findById(ticketId);
-	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
-	}
-
-	if (currentUser.role === UserRole.USER && currentUser._id !== ticket.author) {
-		throw createError(403, "You don't have enough permission to perform this action");
-	}
-
-	const savedComment = Comment.saveComment(ticket.author, commentDetails);
-	return savedComment;
 }
 
 /**
@@ -158,8 +100,6 @@ export default {
 	createTicket,
 	getAllTickets,
 	getTicketById,
-	updateTicketStatus,
-	addCommentToTicket,
-	getAllCommentsOnATicket,
+	updateTicket,
 	generateTicketReport
 };

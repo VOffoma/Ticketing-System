@@ -14,9 +14,3 @@ export interface Ticket extends Document {
 	status: TicketStatus;
 	supportPerson: Types.ObjectId;
 }
-
-export interface TicketInputDTO {
-	author: Ticket['author'];
-	content: Ticket['content'];
-	title: Ticket['title'];
-}

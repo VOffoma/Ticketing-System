@@ -1,10 +1,8 @@
 import { Router, Request, Response } from 'express';
 import asyncHandler from 'express-async-handler';
-import { validate } from 'express-validation';
 import authService from './auth.service';
-import { UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
-import validationRules from '../users/user.validationRules';
-import { nextTick } from 'process';
+import validationMiddleware from '../../middlewares/validation.middleware';
+import { CreateUserDto, UserCredentialsDto } from '../users/user.dto';
 
 const authRouter = Router();
 
@@ -14,9 +12,9 @@ const authRouter = Router();
  */
 authRouter.post(
 	'/signup',
-	validate(validationRules.userRegistrationInfo, { statusCode: 422, keyByField: true }, {}),
+	validationMiddleware(CreateUserDto),
 	asyncHandler(async (request: Request, response: Response) => {
-		const signUpInfo: UserInputDTO = request.body;
+		const signUpInfo: CreateUserDto = request.body;
 		const registeredUser = await authService.registerUser(signUpInfo);
 		response.status(201).send(registeredUser);
 	})
@@ -28,9 +26,9 @@ authRouter.post(
  */
 authRouter.post(
 	'/signin',
-	validate(validationRules.userCredentials, { statusCode: 422, keyByField: true }, {}),
+	validationMiddleware(UserCredentialsDto),
 	asyncHandler(async (request: Request, response: Response) => {
-		const loginCredentials: UserCredentialsDTO = request.body;
+		const loginCredentials: UserCredentialsDto = request.body;
 		const authInfo = await authService.authenticateUser(loginCredentials);
 		response.status(200).send(authInfo);
 	})

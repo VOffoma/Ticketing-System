@@ -1,12 +1,13 @@
+import { CreateUserDto, UserCredentialsDto } from '../users/user.dto';
+import { UserBase } from '../users/user.interface';
 import { User } from '../users/user.model';
-import { UserBase, UserInputDTO, UserCredentialsDTO } from '../users/user.interface';
 
 /**
  *
  * @param userDetails
  * @returns a new user object
  */
-async function registerUser(userDetails: UserInputDTO): Promise<UserBase> {
+async function registerUser(userDetails: CreateUserDto): Promise<UserBase> {
 	const createdUser = new User(userDetails);
 	const registeredUser = await createdUser.save();
 	return registeredUser;
@@ -19,7 +20,7 @@ async function registerUser(userDetails: UserInputDTO): Promise<UserBase> {
  */
 
 async function authenticateUser(
-	userCredentials: UserCredentialsDTO
+	userCredentials: UserCredentialsDto
 ): Promise<{ fullName: string; email: string; token: string }> {
 	const { email, password } = userCredentials;
 	const user = await User.findByCredentials(email, password);

@@ -1,11 +1,11 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import asyncHandler from 'express-async-handler';
-import { validate } from 'express-validation';
 import verifyAuthentication from '../../middlewares/verifyAuthentication.middleware';
 import verifyRole from '../../middlewares/access-control/verifyRole.middleware';
-import validationRules from './ticket.validationRules';
-import { TicketInputDTO } from './ticket.interface';
+import validationMiddleware from '../../middlewares/validation.middleware';
+import { CreateTicketDto, UpdateTicketDto } from './ticket.dto';
 import ticketService from './ticket.service';
+import commentRouter from '../comments/commentRouter';
 
 const ticketRouter = Router();
 
@@ -26,49 +26,17 @@ ticketRouter.get(
 );
 
 /**
- * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketId/comments
- * @description This endpoint exposes the functionality for getting all comments made on a ticket
- */
-ticketRouter.get(
-	'/:ticketId/comments',
-	asyncHandler(async (request: Request, response: Response) => {
-		const comments = await ticketService.getAllCommentsOnATicket(request.params.ticketId);
-		response.status(200).send(comments);
-	})
-);
-
-/**
- * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketId/comments
- * @description This endpoint exposes the functionality for adding a comment to a ticket
- */
-
-ticketRouter.post(
-	'/:ticketId/comments',
-	asyncHandler(async (request: Request, response: Response) => {
-		const savedComment = await ticketService.addCommentToTicket(
-			{
-				commentAuthor: request.currentUser._id,
-				content: request.body.content,
-				ticketId: request.params.ticketId
-			},
-			request.currentUser.role
-		);
-		response.status(201).send(savedComment);
-	})
-);
-
-/**
  * Endpoint: http://localhost:{{port}}/api/v1/tickets/
  * @description This endpoint exposes the functionality for fetching tickets
  * A user would only see tickets he or she created over time
- * A supportperson would only see all tickets assigned to him or her
+ * A supportperson would only see all tickets that are open and in progress
  * The admin will see all tickets
  */
 ticketRouter.get(
 	'/',
 	asyncHandler(async (request: Request, response: Response) => {
 		const { _id, role } = request.currentUser;
-		const tickets = await ticketService.getAllTickets(_id, role);
+		const tickets = await ticketService.getAllTickets({ _id, role });
 		response.status(200).send(tickets);
 	})
 );
@@ -79,9 +47,10 @@ ticketRouter.get(
  */
 ticketRouter.post(
 	'/',
-	validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
+	//validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
+	validationMiddleware(CreateTicketDto),
 	asyncHandler(async (request: Request, response: Response) => {
-		const ticketDetails: TicketInputDTO = { ...request.body, author: request.currentUser._id };
+		const ticketDetails: CreateTicketDto = { ...request.body, author: request.currentUser._id };
 		const newTicket = await ticketService.createTicket(ticketDetails);
 		return response.status(201).send(newTicket);
 	})
@@ -92,10 +61,10 @@ ticketRouter.post(
  * @description This endpoint exposes the functionality for getting a single ticket
  */
 ticketRouter.get(
-	'/:ticketId',
-	validate(validationRules.ticketId, { statusCode: 422, keyByField: true }, {}),
+	'/:ticketId(/^[a-fd]{24}$/i)',
 	asyncHandler(async (request: Request, response: Response) => {
-		const ticket = await ticketService.getTicketById(request.params.ticketId);
+		const { _id, role } = request.currentUser;
+		const ticket = await ticketService.getTicketById(request.params.ticketId, { _id, role });
 		return response.status(200).send(ticket);
 	})
 );
@@ -105,15 +74,17 @@ ticketRouter.get(
  * @description This endpoint exposes the functionality for updating the status of a ticket
  */
 
-ticketRouter.patch(
-	'/:ticketId',
-	verifyRole(['ADMIN', 'SUPPORT']),
-	validate(validationRules.ticketUpdate, { statusCode: 422, keyByField: true }, {}),
-	asyncHandler(async (request: Request, response: Response) => {
-		const update = { Id: request.params.ticketId, updatedStatus: request.body.status };
-		const ticket = await ticketService.updateTicketStatus(update);
-		return response.status(200).send(ticket);
-	})
-);
+// ticketRouter.patch(
+// 	'/:ticketId',
+// 	verifyRole(['ADMIN', 'SUPPORT']),
+// 	validationMiddleware(UpdateTicketDto),
+// 	asyncHandler(async (request: Request, response: Response) => {
+// 		const update = { _id: request.params.ticketId, status: request.body.status };
+// 		const updatedTicket = await ticketService.updateTicketStatus(update);
+// 		return response.status(200).send(updatedTicket);
+// 	})
+// );
+
+ticketRouter.use('/:ticketId/comments', commentRouter);
 
 export default ticketRouter;

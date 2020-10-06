@@ -14,15 +14,3 @@ export interface UserBase extends Document {
 	password: string;
 	role: UserRole;
 }
-
-export interface UserInputDTO {
-	firstName: string;
-	lastName: string;
-	password: string;
-	email: string;
-}
-
-export interface UserCredentialsDTO {
-	email: string;
-	password: string;
-}
