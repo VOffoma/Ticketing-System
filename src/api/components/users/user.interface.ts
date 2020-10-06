@@ -14,3 +14,8 @@ export interface UserBase extends Document {
 	password: string;
 	role: UserRole;
 }
+
+export interface CurrentUser {
+	_id: string;
+	role: string;
+}

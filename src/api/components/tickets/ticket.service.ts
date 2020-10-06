@@ -1,6 +1,5 @@
 import createError from 'http-errors';
-import { Comment, CommentDocument } from '../comments/comment.model';
-import { UserRole } from '../users/user.interface';
+import { UserRole, CurrentUser } from '../users/user.interface';
 import { CreateTicketDto, UpdateTicketDto } from './ticket.dto';
 import TicketModel from './ticket.model';
 import { Ticket, TicketStatus } from './ticket.interface';
@@ -21,7 +20,7 @@ async function createTicket(ticketDetails: CreateTicketDto): Promise<Ticket> {
 /**
  * @returns array of an array of tickets depending on the role of the requesting user
  */
-async function getAllTickets(currentUser: { _id: string; role: string }): Promise<Array<Ticket>> {
+async function getAllTickets(currentUser: CurrentUser): Promise<Array<Ticket>> {
 	const userRole = currentUser.role as UserRole;
 	const userId = currentUser._id;
 	let tickets;
@@ -52,10 +51,7 @@ async function getAllTickets(currentUser: { _id: string; role: string }): Promis
  * @param ticketId
  * @returns a single ticket object
  */
-async function getTicketById(
-	ticketId: string,
-	currentUser: { _id: string; role: string }
-): Promise<Ticket | null> {
+async function getTicketById(ticketId: string, currentUser: CurrentUser): Promise<Ticket | null> {
 	const ticket = await TicketModel.findById(ticketId);
 
 	if (!ticket) {

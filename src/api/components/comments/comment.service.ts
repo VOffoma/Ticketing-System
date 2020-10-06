@@ -1,6 +1,6 @@
 import createError from 'http-errors';
 import { Comment, CommentDocument } from './comment.model';
-import { UserRole } from '../users/user.interface';
+import { UserRole, CurrentUser } from '../users/user.interface';
 import TicketModel from '../tickets/ticket.model';
 
 /**
@@ -9,8 +9,8 @@ import TicketModel from '../tickets/ticket.model';
  * @returns an array of comments with the passed ticketId
  */
 async function getAllCommentsOnATicket(
-	ticketId,
-	currentUser: { _id: string; role: string }
+	ticketId: string,
+	currentUser: CurrentUser
 ): Promise<Array<CommentDocument>> {
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
@@ -36,7 +36,7 @@ async function getAllCommentsOnATicket(
  */
 async function addCommentToTicket(
 	commentDetails,
-	currentUser: { _id: string; role: string }
+	currentUser: CurrentUser
 ): Promise<CommentDocument> {
 	const { ticketId } = commentDetails;
 	const ticket = await TicketModel.findById(ticketId);
