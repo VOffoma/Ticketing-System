@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import { User } from './user.model';
 import { UserRole, UserBase } from './user.interface';
+import errorMessages from '../../../utils/errorMessages';
 
 /**
  *
@@ -15,7 +16,7 @@ async function updateUserRole(roleUpdate: {
 
 	const user = await User.findById(userId);
 	if (!user) {
-		throw createError(404, `User with Id ${userId} does not exist`);
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
 
 	const role = newRole as UserRole;

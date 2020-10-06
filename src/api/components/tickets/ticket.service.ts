@@ -4,6 +4,7 @@ import { CreateTicketDto, UpdateTicketDto } from './ticket.dto';
 import TicketModel from './ticket.model';
 import { Ticket, TicketStatus } from './ticket.interface';
 import generateCSVReport from '../../../utils/generateCSVReport';
+import errorMessages from '../../../utils/errorMessages';
 
 /**
  *
@@ -55,13 +56,13 @@ async function getTicketById(ticketId: string, currentUser: CurrentUser): Promis
 	const ticket = await TicketModel.findById(ticketId);
 
 	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
 
 	// This check below prevent a user who is not the ticket author or a support person or admin
 	// from accessing this information
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
-		throw createError(403, "You don't have enough permission to perform this action");
+		throw new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS);
 	}
 
 	await ticket
@@ -84,7 +85,7 @@ async function updateTicket(ticketId: string, ticketUpdate: Ticket): Promise<Tic
 		{ new: true, runValidators: true }
 	);
 	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketUpdate._id} does not exist`);
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
 	return ticket;
 }

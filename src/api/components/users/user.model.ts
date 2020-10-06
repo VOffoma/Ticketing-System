@@ -4,6 +4,7 @@ import { Schema, Model, model } from 'mongoose';
 import config from '../../../config';
 import { UserBase } from './user.interface';
 import createError from 'http-errors';
+import errorMessages from '../../../utils/errorMessages';
 
 const userSchema = new Schema(
 	{
@@ -105,11 +106,11 @@ userSchema.methods.getAuthenticationInfo = function (): {
 userSchema.statics.findByCredentials = async function (email, password): Promise<UserDocument> {
 	const user = await this.findOne({ email });
 	if (!user) {
-		throw createError(422, 'Invalid login credentials');
+		throw new createError.UnprocessableEntity(errorMessages.MESSAGE_INVALID_CREDENTIALS);
 	}
 	const isPasswordMatch = await user.comparePasswords(password, user.password);
 	if (!isPasswordMatch) {
-		throw createError(422, 'Invalid login credentials');
+		throw new createError.UnprocessableEntity(errorMessages.MESSAGE_INVALID_CREDENTIALS);
 	}
 	return user;
 };

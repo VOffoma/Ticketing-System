@@ -3,6 +3,7 @@ import createError from 'http-errors';
 import { Request, Response, NextFunction } from 'express';
 import config from '../../config';
 import { User } from '../components/users/user.model';
+import errorMessages from '../../utils/errorMessages';
 
 /**
  *
@@ -26,17 +27,17 @@ async function verifyAuthentication(request: Request, response: Response, next: 
 	try {
 		const token = request.headers['x-access-token'];
 		if (!token) {
-			next(createError(401, 'Please login to access this route'));
+			next(new createError.Unauthorized(errorMessages.MESSAGE_NOT_AUTHORIZED));
 		}
 
 		const authenticatedUser = await verifyTokenAndReturnUser(token);
 		if (!authenticatedUser) {
-			next(createError(401, 'Please login to access this route'));
+			next(new createError.Unauthorized(errorMessages.MESSAGE_NOT_AUTHORIZED));
 		}
 		request.currentUser = authenticatedUser;
 		next();
 	} catch (error) {
-		next(createError(401, 'Please login to access this route'));
+		next(new createError.Unauthorized(errorMessages.MESSAGE_NOT_AUTHORIZED));
 	}
 }
 

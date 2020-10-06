@@ -1,6 +1,7 @@
 import { Schema, Model, model, Types } from 'mongoose';
 import createError from 'http-errors';
 import { CommentBase, CommentInputDTO } from './comment.interface';
+import errorMessages from '../../../utils/errorMessages';
 
 const commentSchema = new Schema(
 	{
@@ -45,10 +46,7 @@ commentSchema.statics.saveComment = async function (
 	//if and only if a support agent has commented on the ticket.
 	// We do this by checking that the first comment to be added to the ticket is not from the ticket's author
 	if (!comment && ticketAuthor.equals(commentInput.commentAuthor)) {
-		throw createError(
-			403,
-			'Please wait for our support person to respond before you create a comment'
-		);
+		throw new createError.Locked(errorMessages.MESSAGE_WAIT_FOR_SUPPORT_RESPONSE);
 	}
 	const savedComment = await new Comment(commentInput).save();
 	await savedComment.populate('commentAuthor', 'firstName lastName -_id').execPopulate();

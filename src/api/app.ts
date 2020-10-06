@@ -2,6 +2,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import routes from './components/routes';
+import errorMessages from '../utils/errorMessages';
 
 const app: express.Application = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -11,7 +12,7 @@ app.use('/api/v1', routes);
 
 /// catch 404 and forward to error handler
 app.use((request: Request, response: Response, next: NextFunction) => {
-	const error = createError(404, 'The resource you seek does not exist');
+	const error = new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	next(error);
 });
 

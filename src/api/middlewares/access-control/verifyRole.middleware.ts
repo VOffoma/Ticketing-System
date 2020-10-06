@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import createError from 'http-errors';
+import errorMessages from '../../../utils/errorMessages';
 
 function checkRole(roles: Array<string>) {
 	return async (request: Request, response: Response, next: NextFunction) => {
@@ -7,7 +8,7 @@ function checkRole(roles: Array<string>) {
 
 		if (!currentUser || roles.length === 0) {
 			return next(
-				createError(403, "You don't have enough permission to perform this action")
+				new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS)
 			);
 		}
 
@@ -15,7 +16,9 @@ function checkRole(roles: Array<string>) {
 		if (roles.indexOf(currentUser.role) > -1) {
 			return next();
 		}
-		return next(createError(403, "You don't have enough permission to perform this action"));
+		return next(
+			new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS)
+		);
 	};
 }
 

@@ -12,7 +12,7 @@ function validationMiddleware<T>(type: any, skipMissingProperties = false): expr
 						.map((error: ValidationError) => Object.values(error.constraints!))
 						.join(', ');
 
-					next(createError(422, message));
+					next(new createError.UnprocessableEntity(message));
 				} else {
 					next();
 				}

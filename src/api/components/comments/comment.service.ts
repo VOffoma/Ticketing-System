@@ -2,6 +2,7 @@ import createError from 'http-errors';
 import { Comment, CommentDocument } from './comment.model';
 import { UserRole, CurrentUser } from '../users/user.interface';
 import TicketModel from '../tickets/ticket.model';
+import errorMessages from '../../../utils/errorMessages';
 
 /**
  *
@@ -14,13 +15,13 @@ async function getAllCommentsOnATicket(
 ): Promise<Array<CommentDocument>> {
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
 
 	// This check below prevent a user who is not the ticket author or a support person or admin
 	// from accessing this information
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
-		throw createError(403, "You don't have enough permission to perform this action");
+		throw new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS);
 	}
 	const comments = await Comment.find({ ticketId: ticketId })
 		.populate('commentAuthor', 'firstName lastName -_id')
@@ -41,13 +42,13 @@ async function addCommentToTicket(
 	const { ticketId } = commentDetails;
 	const ticket = await TicketModel.findById(ticketId);
 	if (!ticket) {
-		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
 
 	// This check below prevent a user who is not the ticket author or a support person or admin
 	// from accessing this information
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
-		throw createError(403, "You don't have enough permission to perform this action");
+		throw new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS);
 	}
 
 	const savedComment = Comment.saveComment(ticket.author, commentDetails);
