@@ -13,8 +13,8 @@ export class CreateTicketDto {
 
 export class UpdateTicketDto {
 	@IsEnum(TicketStatus)
-	public status?: string;
+	public status: string;
 
 	@IsString()
-	public supportPersonId?: string;
+	public supportPersonId: string;
 }

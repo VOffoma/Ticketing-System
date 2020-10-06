@@ -5,15 +5,18 @@ const ticketSchema = new Schema(
 	{
 		author: {
 			ref: 'User',
-			type: Schema.Types.ObjectId
+			type: Schema.Types.ObjectId,
+			immutable: true
 		},
 		content: {
 			type: String,
-			required: 'Please enter a ticket content'
+			required: 'Please enter a ticket content',
+			immutable: true
 		},
 		title: {
 			type: String,
-			required: 'Please enter a ticket title'
+			required: 'Please enter a ticket title',
+			immutable: true
 		},
 		status: {
 			type: String,

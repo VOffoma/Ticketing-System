@@ -1,6 +1,7 @@
 import createError from 'http-errors';
+import { Types } from 'mongoose';
 import { UserRole, CurrentUser } from '../users/user.interface';
-import { CreateTicketDto, UpdateTicketDto } from './ticket.dto';
+import { CreateTicketDto } from './ticket.dto';
 import TicketModel from './ticket.model';
 import { Ticket, TicketStatus } from './ticket.interface';
 import generateCSVReport from '../../../utils/generateCSVReport';
@@ -78,12 +79,44 @@ async function getTicketById(ticketId: string, currentUser: CurrentUser): Promis
  * @param ticketUpdate object containing ticketId and future status
  * @returns an object containing the updated ticket information
  */
-async function updateTicket(ticketId: string, ticketUpdate: Ticket): Promise<Ticket | null> {
+async function updateTicketStatus(ticketId: string, status: string): Promise<Ticket | null> {
 	const ticket = await TicketModel.findOneAndUpdate(
 		{ _id: ticketId },
-		{ $set: ticketUpdate },
+		{
+			$set: {
+				status: status as TicketStatus
+			}
+		},
 		{ new: true, runValidators: true }
-	);
+	)
+		.populate('author', 'firstName lastName -_id')
+		.populate('supportPerson', 'firstName lastName -_id');
+
+	if (!ticket) {
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
+	}
+	return ticket;
+}
+
+/**
+ *
+ * @param ticketUpdate object containing ticketId and future status
+ * @returns an object containing the updated ticket information
+ */
+async function assignSupport(ticketId: string, supportPersonId: string): Promise<Ticket | null> {
+	const ticket = await TicketModel.findOneAndUpdate(
+		{ _id: ticketId },
+		{
+			$set: {
+				supportPerson: Types.ObjectId(supportPersonId),
+				status: TicketStatus.INPROGRESS
+			}
+		},
+		{ new: true, runValidators: true }
+	)
+		.populate('author', 'firstName lastName -_id')
+		.populate('supportPerson', 'firstName lastName -_id');
+
 	if (!ticket) {
 		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
 	}
@@ -115,6 +148,7 @@ export default {
 	createTicket,
 	getAllTickets,
 	getTicketById,
-	updateTicket,
-	generateTicketReport
+	updateTicketStatus,
+	generateTicketReport,
+	assignSupport
 };

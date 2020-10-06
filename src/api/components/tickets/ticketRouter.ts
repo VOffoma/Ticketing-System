@@ -47,7 +47,6 @@ ticketRouter.get(
  */
 ticketRouter.post(
 	'/',
-	//validate(validationRules.ticketCreation, { statusCode: 422, keyByField: true }, {}),
 	validationMiddleware(CreateTicketDto),
 	asyncHandler(async (request: Request, response: Response) => {
 		const ticketDetails: CreateTicketDto = { ...request.body, author: request.currentUser._id };
@@ -70,20 +69,40 @@ ticketRouter.get(
 );
 
 /**
- * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid/updateStatus
  * @description This endpoint exposes the functionality for updating the status of a ticket
  */
 
-// ticketRouter.patch(
-// 	'/:ticketId',
-// 	verifyRole(['ADMIN', 'SUPPORT']),
-// 	validationMiddleware(UpdateTicketDto),
-// 	asyncHandler(async (request: Request, response: Response) => {
-// 		const update = { _id: request.params.ticketId, status: request.body.status };
-// 		const updatedTicket = await ticketService.updateTicketStatus(update);
-// 		return response.status(200).send(updatedTicket);
-// 	})
-// );
+ticketRouter.patch(
+	'/:ticketId([a-f0-9]{24})/updateStatus',
+	verifyRole(['ADMIN', 'SUPPORT']),
+	validationMiddleware(UpdateTicketDto, true),
+	asyncHandler(async (request: Request, response: Response) => {
+		const updatedTicket = await ticketService.updateTicketStatus(
+			request.params.ticketId,
+			request.body.status
+		);
+		return response.status(200).send(updatedTicket);
+	})
+);
+
+/**
+ * Endpoint: http://localhost:{{port}}/api/v1/tickets/:ticketid/assignSupport
+ * @description This endpoint exposes the functionality for assigning a ticket
+ */
+
+ticketRouter.patch(
+	'/:ticketId([a-f0-9]{24})/assignSupport',
+	verifyRole(['ADMIN', 'SUPPORT']),
+	validationMiddleware(UpdateTicketDto, true),
+	asyncHandler(async (request: Request, response: Response) => {
+		const { ticketId } = request.params;
+		const supportpersonId = request.body.supportPersonId || request.currentUser._id;
+
+		const updatedTicket = await ticketService.assignSupport(ticketId, supportpersonId);
+		return response.status(200).send(updatedTicket);
+	})
+);
 
 ticketRouter.use('/:ticketId/comments', commentRouter);
 
