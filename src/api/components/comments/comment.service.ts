@@ -22,7 +22,9 @@ async function getAllCommentsOnATicket(
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw createError(403, "You don't have enough permission to perform this action");
 	}
-	const comments = await Comment.find({ ticketId: ticketId }).sort({ createdAt: -1 });
+	const comments = await Comment.find({ ticketId: ticketId })
+		.populate('commentAuthor', 'firstName lastName -_id')
+		.sort({ createdAt: -1 });
 	return comments;
 }
 

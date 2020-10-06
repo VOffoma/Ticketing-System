@@ -27,13 +27,22 @@ async function getAllTickets(currentUser: { _id: string; role: string }): Promis
 	let tickets;
 
 	if (userRole === UserRole.USER) {
-		tickets = await TicketModel.find({ author: userId }).sort({ createdAt: -1 });
+		tickets = await TicketModel.find({ author: userId })
+			.populate('author', 'firstName lastName -_id')
+			.populate('supportPerson', 'firstName lastName -_id')
+			.sort({ createdAt: -1 });
 	} else if (userRole == UserRole.SUPPORT) {
 		tickets = await TicketModel.find({
 			$or: [{ status: TicketStatus.OPEN }, { status: TicketStatus.INPROGRESS }]
-		}).sort({ createdAt: -1 });
+		})
+			.populate('author', 'firstName lastName -_id')
+			.populate('supportPerson', 'firstName lastName -_id')
+			.sort({ createdAt: -1 });
 	} else {
-		tickets = await TicketModel.find().sort({ createdAt: -1 });
+		tickets = await TicketModel.find()
+			.populate('author', 'firstName lastName -_id')
+			.populate('supportPerson', 'firstName lastName -_id')
+			.sort({ createdAt: -1 });
 	}
 	return tickets;
 }
@@ -48,6 +57,7 @@ async function getTicketById(
 	currentUser: { _id: string; role: string }
 ): Promise<Ticket | null> {
 	const ticket = await TicketModel.findById(ticketId);
+
 	if (!ticket) {
 		throw createError(404, `Ticket with Id ${ticketId} does not exist`);
 	}
@@ -57,6 +67,11 @@ async function getTicketById(
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw createError(403, "You don't have enough permission to perform this action");
 	}
+
+	await ticket
+		.populate('author', 'firstName lastName -_id')
+		.populate('supportPerson', 'firstName lastName -_id')
+		.execPopulate();
 
 	return ticket;
 }

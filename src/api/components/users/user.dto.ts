@@ -1,4 +1,4 @@
-import { IsString, IsEmail, Min, IsEnum, Matches } from 'class-validator';
+import { IsString, IsEmail, IsEnum, Matches, MinLength, minLength } from 'class-validator';
 import { UserRole } from './user.interface';
 
 export class CreateUserDto {
@@ -6,17 +6,17 @@ export class CreateUserDto {
 	public email: string;
 
 	@IsString()
-	@Min(6)
+	@MinLength(6)
 	public password: string;
 
 	@IsString()
 	@Matches(/^[a-zA-Z ,.'-]+$/)
-	@Min(2)
+	@MinLength(2)
 	public firstName: string;
 
 	@IsString()
 	@Matches(/^[a-zA-Z ,.'-]+$/)
-	@Min(2)
+	@MinLength(2)
 	public lastName: string;
 }
 
@@ -25,7 +25,7 @@ export class UserCredentialsDto {
 	public email: string;
 
 	@IsString()
-	@Min(6)
+	@MinLength(6)
 	public password: string;
 }
 

@@ -1,11 +1,13 @@
 import { TicketStatus } from './ticket.interface';
-import { IsString, IsEnum } from 'class-validator';
+import { IsString, IsEnum, MinLength } from 'class-validator';
 
 export class CreateTicketDto {
 	@IsString()
+	@MinLength(10)
 	public title: string;
 
 	@IsString()
+	@MinLength(10)
 	public content: string;
 }
 

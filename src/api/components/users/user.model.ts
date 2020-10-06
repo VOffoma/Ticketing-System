@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Schema, Model, model } from 'mongoose';
 import config from '../../../config';
 import { UserBase } from './user.interface';
+import createError from 'http-errors';
 
 const userSchema = new Schema(
 	{
@@ -104,11 +105,11 @@ userSchema.methods.getAuthenticationInfo = function (): {
 userSchema.statics.findByCredentials = async function (email, password): Promise<UserDocument> {
 	const user = await this.findOne({ email });
 	if (!user) {
-		throw new Error('Invalid login credentials');
+		throw createError(422, 'Invalid login credentials');
 	}
 	const isPasswordMatch = await user.comparePasswords(password, user.password);
 	if (!isPasswordMatch) {
-		throw new Error('Invalid login credentials');
+		throw createError(422, 'Invalid login credentials');
 	}
 	return user;
 };

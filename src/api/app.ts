@@ -11,12 +11,11 @@ app.use('/api/v1', routes);
 
 /// catch 404 and forward to error handler
 app.use((request: Request, response: Response, next: NextFunction) => {
-	const error = createError(404, 'The path you seek does not exist');
+	const error = createError(404, 'The resource you seek does not exist');
 	next(error);
 });
 
 app.use((error, request: Request, response: Response, next: NextFunction) => {
-	console.log(error);
 	response.status(error.status || error.statusCode || 500);
 	response.json({
 		message: error.message

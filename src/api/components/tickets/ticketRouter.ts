@@ -61,7 +61,7 @@ ticketRouter.post(
  * @description This endpoint exposes the functionality for getting a single ticket
  */
 ticketRouter.get(
-	'/:ticketId(/^[a-fd]{24}$/i)',
+	'/:ticketId([a-f0-9]{24})',
 	asyncHandler(async (request: Request, response: Response) => {
 		const { _id, role } = request.currentUser;
 		const ticket = await ticketService.getTicketById(request.params.ticketId, { _id, role });
