@@ -43,6 +43,7 @@ It expects the input in the below format:
     "password": ""
 }
 ```
+--------
 
 * `POST: http://localhost:7077/api/v1/auth/signin` : this endpoint is for logging in a user.
 
@@ -54,8 +55,11 @@ It expects the input in the below format:
     "password": ""
 }
 ```
+--------
 
 * `GET: http://localhost:7077/api/v1/tickets/` : this endpoint is responsible for getting all tickets.
+
+--------
 
 * `POST: http://localhost:7077/api/v1/tickets/` : this endpoint is for creating a new ticket
 
@@ -67,7 +71,11 @@ It expects the input in the below format:
     "content": ""
 }
 ```
+-------
+
 * `GET: http://localhost:7077/api/v1/tickets/:ticketId` : this endpoint is responsible for getting get details of a specific ticket.
+
+-------
 
 * `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/updateStatus` : this endpoint is responsible for updating the status of a ticket
 
@@ -77,7 +85,9 @@ It expects the input in the below format:
 {
     "status": "OPEN | INPROGRESS | CANCELLED | SOLVED"
 }
+```
 
+---------
 
 * `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` : this endpoint is responsible for assigning a support person or self to a ticket. If supportPersonId is not supplied, then the logged in user is assigned the ticket
 
@@ -87,7 +97,8 @@ It expects the input in the below format:
 {
     "supportPersonId": ""
 }
-
+```
+----------
 
 * `GET: http://localhost:7077/api/v1/tickets/report` : this endpoint is responsible for getting report of closed tickets in the last 30 days in csv format.
 
