@@ -15,7 +15,10 @@ This application makes use of a database instance in Mongodb altas and there is 
     $ Find the link to the database in the .env.dev in the config folder in the root folder
     $ Paste the link in the input box and click "CONNECT" to connect to the already created database called Ticketing-Systems
 
-The database contains the following collections already seeded: users, tickets and comments. If you should decided to remove the data and reseed the database, the seed folder contains the JSON files that you can use to resend the collection. Kindly see this link for import data to the collections: https://docs.mongodb.com/compass/master/import-export#import-data-into-a-collection
+The database contains the following collections already seeded: users, tickets and comments. If you should decided to remove the data and reseed the database, the seed folder contains the JSON files that you can use to resend the collection. Kindly see this link for import data to the collections: https://docs.mongodb.com/compass/master/import-export#import-data-into-a-collection . 
+
+The users collections have 3 users with different roles. The password for all 3 users is "helloworld.1"
+
 
 ## How to setup and run the application
 
