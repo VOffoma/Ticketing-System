@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import createError from 'http-errors';
 import routes from './components/routes';
 import errorMessages from '../utils/errorMessages';
+import logger from '../utils/logger';
 
 const app: express.Application = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,6 +23,16 @@ app.use((error, request: Request, response: Response, next: NextFunction) => {
 		message: error.message
 		//stack: error.stack
 	});
+});
+
+process.on('uncaughtException', (error) => {
+	logger.error(error);
+	process.exit(1);
+});
+
+process.on('unhandledRejection', (error) => {
+	logger.error(error);
+	process.exit(1);
 });
 
 export default app;
