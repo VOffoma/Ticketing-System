@@ -1,5 +1,6 @@
 import db from '../../../../utils/db';
 import dummyData from '../../../../utils/dummyData';
+import { UserRole } from '../../users/user.interface';
 import { TicketStatus } from '../ticket.interface';
 import ticketService from '../ticket.service';
 
@@ -91,56 +92,89 @@ describe('TicketService', () => {
 		});
 	});
 
-	// describe('updateTicketStatus function', () => {
-	// 	it('should return an object containing the updated property when given a valid update object', async () => {
-	// 		const dummyUser = dummyData.createDummyUser();
-	// 		const savedUser = await dummyData.registerDummyUser(dummyUser);
+	describe('updateTicketStatus function', () => {
+		it('should return an object containing the updated property when given a valid update object', async () => {
+			const dummyUser = dummyData.createDummyUser();
+			const savedUser = await dummyData.registerDummyUser(dummyUser);
 
-	// 		const dummyTicket = dummyData.createDummyTicket(savedUser._id);
-	// 		const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
+			const dummyTicket = dummyData.createDummyTicket(savedUser._id);
+			const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
 
-	// 		const ticketUpdate = {
-	// 			Id: savedTicket._id,
-	// 			updatedStatus: 'INPROGRESS'
-	// 		};
-	// 		await expect(ticketService.updateTicketStatus(ticketUpdate)).resolves.toHaveProperty(
-	// 			'status',
-	// 			'INPROGRESS'
-	// 		);
-	// 	});
+			const newStatus = 'INPROGRESS';
 
-	// 	it('should throw an error when the ticketId does not exist', async () => {
-	// 		const dummyUser = dummyData.createDummyUser();
-	// 		const savedUser = await dummyData.registerDummyUser(dummyUser);
+			await expect(
+				ticketService.updateTicketStatus(savedTicket._id, newStatus)
+			).resolves.toHaveProperty('status', 'INPROGRESS');
+		});
 
-	// 		const dummyTicket = dummyData.createDummyTicket(savedUser._id);
-	// 		await dummyData.saveDummyTicket(dummyTicket);
+		it('should throw an error when the ticketId does not exist', async () => {
+			const ticketId = 'ksjseiksks';
+			const newStatus = 'INPROGRESS';
 
-	// 		const ticketUpdate = {
-	// 			Id: 'ksjseiksks',
-	// 			updatedStatus: 'INPROGRESS'
-	// 		};
-	// 		await expect(ticketService.updateTicketStatus(ticketUpdate)).rejects.toThrowError();
-	// 	});
+			await expect(
+				ticketService.updateTicketStatus(ticketId, newStatus)
+			).rejects.toThrowError();
+		});
 
-	// 	it('should throw an error when the status property receives an invalid value', async () => {
-	// 		const dummyUser = dummyData.createDummyUser();
-	// 		const savedUser = await dummyData.registerDummyUser(dummyUser);
+		it('should throw an error when the status property receives an invalid value', async () => {
+			const dummyUser = dummyData.createDummyUser();
+			const savedUser = await dummyData.registerDummyUser(dummyUser);
 
-	// 		const dummyTicket = dummyData.createDummyTicket(savedUser._id);
-	// 		const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
+			const dummyTicket = dummyData.createDummyTicket(savedUser._id);
+			const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
 
-	// 		const ticketUpdate = {
-	// 			Id: savedTicket._id,
-	// 			updatedStatus: 'happy'
-	// 		};
-	// 		await expect(ticketService.updateTicketStatus(ticketUpdate)).rejects.toThrowError();
-	// 	});
+			const newStatus = 'happy';
+			await expect(
+				ticketService.updateTicketStatus(savedTicket._id, newStatus)
+			).rejects.toThrowError();
+		});
 
-	// 	afterAll(async () => {
-	// 		await db.removeAllDocuments('tickets');
-	// 	});
-	// });
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
+		});
+	});
+
+	describe('assignSupport function', () => {
+		it('should return an object containing the updated property when given a valid update object', async () => {
+			const dummyUser = dummyData.createDummyUser();
+			const savedUser = await dummyData.registerDummyUser(dummyUser);
+			await savedUser.updateOne({ role: UserRole.SUPPORT });
+
+			const dummyTicket = dummyData.createDummyTicket(savedUser._id);
+			const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
+
+			await expect(
+				ticketService.assignSupport(savedTicket._id, savedUser._id)
+			).resolves.toHaveProperty('supportPerson.firstName', savedUser.firstName);
+		});
+
+		it('should throw an error when the ticketId does not exist', async () => {
+			const ticketId = 'ksjseiksks';
+
+			const dummyUser = dummyData.createDummyUser();
+			const savedUser = await dummyData.registerDummyUser(dummyUser);
+
+			await expect(
+				ticketService.assignSupport(ticketId, savedUser._id)
+			).rejects.toThrowError();
+		});
+
+		it('should throw an error when the supportpersonId does not exist or really isnt an id for a  support person or admin', async () => {
+			const dummyUser = dummyData.createDummyUser();
+			const savedUser = await dummyData.registerDummyUser(dummyUser);
+
+			const dummyTicket = dummyData.createDummyTicket(savedUser._id);
+			const savedTicket = await dummyData.saveDummyTicket(dummyTicket);
+
+			await expect(
+				ticketService.assignSupport(savedTicket._id, savedUser._id)
+			).rejects.toThrowError();
+		});
+
+		afterAll(async () => {
+			await db.removeAllDocuments('tickets');
+		});
+	});
 
 	describe('generateTicketReport function', () => {
 		it('should return an object containing csv', async () => {

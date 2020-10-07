@@ -54,7 +54,7 @@ describe('CommentService', () => {
 	});
 
 	describe('addCommentToTicket function', () => {
-		it('should return an object containing the initial properties when valid input is given', async () => {
+		it('should return an object containing one of the initial properties when valid input is given', async () => {
 			const dummyUser = dummyData.createDummyUser();
 			const savedUser = await dummyData.registerDummyUser(dummyUser);
 
@@ -69,7 +69,7 @@ describe('CommentService', () => {
 					_id: savedUser._id,
 					role: savedUser.role
 				})
-			).resolves.toMatchObject(dummyComment);
+			).resolves.toHaveProperty('content', dummyComment.content);
 		});
 
 		it('should throw an error when an invalid input is given', async () => {

@@ -49,9 +49,17 @@ commentSchema.statics.saveComment = async function (
 		throw new createError.Locked(errorMessages.MESSAGE_WAIT_FOR_SUPPORT_RESPONSE);
 	}
 	const savedComment = await new Comment(commentInput).save();
-	await savedComment.populate('commentAuthor', 'firstName lastName -_id').execPopulate();
 	return savedComment;
 };
+
+commentSchema.post('save', async function (doc, next) {
+	await doc.populate('commentAuthor', 'firstName lastName -_id').execPopulate();
+	next();
+});
+
+commentSchema.pre('find', function () {
+	this.populate('commentAuthor', 'firstName lastName -_id');
+});
 
 export interface CommentDocument extends CommentBase {}
 

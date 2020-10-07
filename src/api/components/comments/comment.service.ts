@@ -23,9 +23,7 @@ async function getAllCommentsOnATicket(
 	if (currentUser.role === UserRole.USER && !ticket.author.equals(currentUser._id)) {
 		throw new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS);
 	}
-	const comments = await Comment.find({ ticketId: ticketId })
-		.populate('commentAuthor', 'firstName lastName -_id')
-		.sort({ createdAt: -1 });
+	const comments = await Comment.find({ ticketId: ticketId }).sort({ createdAt: -1 });
 	return comments;
 }
 

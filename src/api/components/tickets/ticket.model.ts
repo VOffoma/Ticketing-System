@@ -32,6 +32,19 @@ const ticketSchema = new Schema(
 	{ timestamps: true }
 );
 
+ticketSchema.post('save', async function (doc, next) {
+	await doc.populate('author').execPopulate();
+	next();
+});
+
+ticketSchema.post('findById', async function (doc, next) {
+	await doc
+		.populate('author')
+		.populate('supportPerson', 'firstName lastName -_id')
+		.execPopulate();
+	next();
+});
+
 const ticketModel = model<Ticket>('Ticket', ticketSchema);
 
 export default ticketModel;

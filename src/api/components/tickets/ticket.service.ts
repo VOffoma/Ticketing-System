@@ -1,6 +1,7 @@
 import createError from 'http-errors';
 import { Types } from 'mongoose';
 import { UserRole, CurrentUser } from '../users/user.interface';
+import { User } from '../users/user.model';
 import { CreateTicketDto } from './ticket.dto';
 import TicketModel from './ticket.model';
 import { Ticket, TicketStatus } from './ticket.interface';
@@ -15,7 +16,6 @@ import errorMessages from '../../../utils/errorMessages';
 async function createTicket(ticketDetails: CreateTicketDto): Promise<Ticket> {
 	const createdTicket = new TicketModel(ticketDetails);
 	const savedTicket = await createdTicket.save();
-	await savedTicket.populate('author').execPopulate();
 	return savedTicket;
 }
 
@@ -86,11 +86,6 @@ async function getTicketById(ticketId: string, currentUser: CurrentUser): Promis
 		throw new createError.Forbidden(errorMessages.MESSAGE_YOU_DONT_HAVE_REQUIRED_PERMISSIONS);
 	}
 
-	await ticket
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id')
-		.execPopulate();
-
 	return ticket;
 }
 
@@ -124,6 +119,15 @@ async function updateTicketStatus(ticketId: string, status: string): Promise<Tic
  * @returns an object containing the updated ticket information
  */
 async function assignSupport(ticketId: string, supportPersonId: string): Promise<Ticket | null> {
+	const supportPerson = await User.findOne({
+		_id: supportPersonId,
+		$or: [{ role: UserRole.SUPPORT }, { role: UserRole.ADMIN }]
+	});
+
+	if (!supportPerson) {
+		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
+	}
+
 	const ticket = await TicketModel.findOneAndUpdate(
 		{ _id: ticketId },
 		{
