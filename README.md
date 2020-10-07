@@ -102,6 +102,22 @@ It expects the input in the below format:
 
 * `GET: http://localhost:7077/api/v1/tickets/report` : this endpoint is responsible for getting report of closed tickets in the last 30 days in csv format.
 
+----------
+
+* `GET: http://localhost:7077/api/v1/tickets/:ticketId/comments` : this endpoint is responsible for getting all comments for a ticket
+
+---------
+
+* `POST: http://localhost:7077/api/v1/tickets/:ticketId/comments` : this endpoint is responsible for posting a comment on a ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "content": ""
+}
+```
+-------
 
 
 Note: All routes excepts for the routes for signin and signup are protected. Ensure the token you recieved after signin is sent back in the header 'x-access-token' when trying to access protected routes.
