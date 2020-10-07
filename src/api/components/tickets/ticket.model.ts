@@ -37,11 +37,8 @@ ticketSchema.post('save', async function (doc, next) {
 	next();
 });
 
-ticketSchema.post('findById', async function (doc, next) {
-	await doc
-		.populate('author')
-		.populate('supportPerson', 'firstName lastName -_id')
-		.execPopulate();
+ticketSchema.post(/^findOne/, async function (doc, next) {
+	await doc.populate('author').populate('supportPerson', 'firstName lastName').execPopulate();
 	next();
 });
 

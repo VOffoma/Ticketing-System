@@ -40,10 +40,7 @@ async function getAllTickets(currentUser: CurrentUser): Promise<Array<Ticket>> {
 }
 
 async function getAllTicketsForUser(userId): Promise<Array<Ticket>> {
-	const tickets = await TicketModel.find({ author: userId })
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id')
-		.sort({ createdAt: -1 });
+	const tickets = await TicketModel.find({ author: userId }).sort({ createdAt: -1 });
 
 	return tickets;
 }
@@ -51,19 +48,13 @@ async function getAllTicketsForUser(userId): Promise<Array<Ticket>> {
 async function getAllTicketsForSupport(): Promise<Array<Ticket>> {
 	const tickets = await TicketModel.find({
 		$or: [{ status: TicketStatus.OPEN }, { status: TicketStatus.INPROGRESS }]
-	})
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id')
-		.sort({ createdAt: -1 });
+	}).sort({ createdAt: -1 });
 
 	return tickets;
 }
 
 async function getAllTicketsForAdmin(): Promise<Array<Ticket>> {
-	const tickets = await TicketModel.find()
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id')
-		.sort({ createdAt: -1 });
+	const tickets = await TicketModel.find().sort({ createdAt: -1 });
 	return tickets;
 }
 
@@ -74,7 +65,7 @@ async function getAllTicketsForAdmin(): Promise<Array<Ticket>> {
  * @returns a single ticket object
  */
 async function getTicketById(ticketId: string, currentUser: CurrentUser): Promise<Ticket | null> {
-	const ticket = await TicketModel.findById(ticketId);
+	const ticket = await TicketModel.findOne({ _id: ticketId });
 
 	if (!ticket) {
 		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
@@ -103,9 +94,7 @@ async function updateTicketStatus(ticketId: string, status: string): Promise<Tic
 			}
 		},
 		{ new: true, runValidators: true }
-	)
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id');
+	);
 
 	if (!ticket) {
 		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);
@@ -137,9 +126,7 @@ async function assignSupport(ticketId: string, supportPersonId: string): Promise
 			}
 		},
 		{ new: true, runValidators: true }
-	)
-		.populate('author', 'firstName lastName -_id')
-		.populate('supportPerson', 'firstName lastName -_id');
+	);
 
 	if (!ticket) {
 		throw new createError.NotFound(errorMessages.MESSAGE_RESOURCE_NOT_FOUND);

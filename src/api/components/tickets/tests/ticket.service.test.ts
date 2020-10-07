@@ -72,7 +72,7 @@ describe('TicketService', () => {
 					_id: savedUser._id,
 					role: savedUser.role
 				})
-			).resolves.toMatchObject(dummyTicket);
+			).resolves.toHaveProperty('_id', savedTicket._id);
 		});
 
 		it('should throw an error when the ticketId does not exist', async () => {
