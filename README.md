@@ -17,7 +17,27 @@ This application makes use of a database instance in Mongodb altas and there is 
 
 The database contains the following collections already seeded: users, tickets and comments. If you should decided to remove the data and reseed the database, the seed folder contains the JSON files that you can use to resend the collection. Kindly see this link for import data to the collections: https://docs.mongodb.com/compass/master/import-export#import-data-into-a-collection . 
 
-The users collections have 3 users with different roles. The password for all 3 users is "helloworld.1"
+The users collections have 4 users with different roles. The password for all 3 users is "helloworld.1". Kindy find their info below
+
+```JSON
+
+  "role": "USER",
+  "email": "sarah.sandals@gmail.com",
+  "password": "helloworld.1"
+-------
+  "role": "SUPPORT",
+  "email": "ben.bench@gmail.com",
+  "password": "helloworld.1",
+------
+  "role": "ADMIN",
+  "email": "mike.mikes@gmail.com",
+   "password": "helloworld.1",
+-----
+  "role": "SUPPORT",
+  "email": "sloane.stone@gmail.com",
+  "password": "helloworld.1",
+
+```
 
 
 ## How to setup and run the application
