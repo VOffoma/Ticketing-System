@@ -7,7 +7,13 @@ This project is a backend implementation for a customer support ticketing system
 ## Requirements
 
 -   NodeJS: Simply ensure that you have the most recent stable version of Node.js.
--   MongoDB Compass: This application makes use of a database instance in Mongodb altas. The link to the database is in the .env.dev and .env.prod files.
+-   MongoDB Compass: This application makes use of a database instance in Mongodb altas. The database has some seeded collections in it. To access the database, kindly do the following:
+```
+    * Download and install Mongodb Compass
+    * Find the database URI in the .env.dev file in the config folder in the root folder
+    * Open the Compass app and paste the URI in the input field and click the "CONNECT" button
+    * On successfull connection, you will see the database called "Ticketing-System" and it contains the following collections already seeded: users, tickets and comments
+ ```
 
 ## How to setup and run the application
 
