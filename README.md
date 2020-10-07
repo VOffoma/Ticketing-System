@@ -7,7 +7,38 @@ This project is a backend implementation for a customer support ticketing system
 ## Requirements
 
 -   NodeJS: Simply ensure that you have the most recent stable version of Node.js.
--   MongoDB Compass: This application makes use of a database instance in Mongodb altas. The link to the database is in the .env.dev and .env.prod files.
+
+## How to setup the database
+This application makes use of a database instance in Mongodb altas and there is a database already created and populated with seeded collections for entities "users", "tickets", "comments".  To access the data in the database, Kindly do the following
+
+    $ Download and Install Mongodb compass
+    $ Find the link to the database in the .env.dev in the config folder in the root folder
+    $ Paste the link in the input box and click "CONNECT" to connect to the already created database called Ticketing-Systems
+
+The database contains the following collections already seeded: users, tickets and comments. If you should decided to remove the data and reseed the database, the seed folder contains the JSON files that you can use to resend the collection. Kindly see this link for import data to the collections: https://docs.mongodb.com/compass/master/import-export#import-data-into-a-collection . 
+
+The users collections have 4 users with different roles. The password for all 3 users is "helloworld.1". Kindy find their info below
+
+```JSON
+
+  "role": "USER",
+  "email": "sarah.sandals@gmail.com",
+  "password": "helloworld.1"
+-------
+  "role": "SUPPORT",
+  "email": "ben.bench@gmail.com",
+  "password": "helloworld.1",
+------
+  "role": "ADMIN",
+  "email": "mike.mikes@gmail.com",
+   "password": "helloworld.1",
+-----
+  "role": "SUPPORT",
+  "email": "sloane.stone@gmail.com",
+  "password": "helloworld.1",
+
+```
+
 
 ## How to setup and run the application
 
@@ -31,19 +62,94 @@ Apart from the scripts for running the application, there are scripts that do ot
 
 The endpoints on the app are:
 
-| resource                                                              | description                                                    |
-| :-------------------------------------------------------------------- | :------------------------------------------------------------- |
-| POST: `http://localhost:7077/api/v1/auth/signup`                      | register a user                                                |
-| POST: `http://localhost:7077/api/v1/auth/signin`                      | authenticate user                                              |
-| GET: `http://localhost:7077/api/v1/tickets/`                          | get all tickets                                                |
-| POST: `http://localhost:7077/api/v1/tickets/`                         | post a ticket                                                  |
-| GET: `http://localhost:7077/api/v1/tickets/:ticketId`                 | get details of a specific ticket                               |
-| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/updateStatus`  | update the status of a ticket                                  |
-| POST: `http://localhost:7077/api/v1/tickets/:ticketId/comments`       | post a comment on a ticket                                     |
-| GET: `http://localhost:7077/api/v1/tickets/:ticketId/comments`        | get all comments for a ticket                                  |
-| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` | assign a support persons or self to a ticket                   |
-| GET: `http://localhost:7077/api/v1/tickets/report`                    | get report of closed tickets in the last 30 days in csv format |
-| PATCH: `http://localhost:7077/api/v1/users/:userId`                   | update a user's role                                           |
+* `POST: http://localhost:7077/api/v1/auth/signup` : this endpoint is for registering user.
+
+It expects the input in the below format:
+
+```JSON
+{
+    "firstName": "",
+    "lastName": "",
+    "email":  "",
+    "password": ""
+}
+```
+--------
+
+* `POST: http://localhost:7077/api/v1/auth/signin` : this endpoint is for logging in a user.
+
+It expects the input in the below format:
+
+```JSON
+{
+    "email":  "",
+    "password": ""
+}
+```
+--------
+
+* `GET: http://localhost:7077/api/v1/tickets/` : this endpoint is responsible for getting all tickets.
+
+--------
+
+* `POST: http://localhost:7077/api/v1/tickets/` : this endpoint is for creating a new ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "title": "",
+    "content": ""
+}
+```
+-------
+
+* `GET: http://localhost:7077/api/v1/tickets/:ticketId` : this endpoint is responsible for getting get details of a specific ticket.
+
+-------
+
+* `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/updateStatus` : this endpoint is responsible for updating the status of a ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "status": "OPEN | INPROGRESS | CANCELLED | SOLVED"
+}
+```
+
+---------
+
+* `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` : this endpoint is responsible for assigning a support person or self to a ticket. If supportPersonId is not supplied, then the logged in user is assigned the ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "supportPersonId": ""
+}
+```
+----------
+
+* `GET: http://localhost:7077/api/v1/tickets/report` : this endpoint is responsible for getting report of closed tickets in the last 30 days in csv format.
+
+----------
+
+* `GET: http://localhost:7077/api/v1/tickets/:ticketId/comments` : this endpoint is responsible for getting all comments for a ticket
+
+---------
+
+* `POST: http://localhost:7077/api/v1/tickets/:ticketId/comments` : this endpoint is responsible for posting a comment on a ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "content": ""
+}
+```
+-------
+
 
 Note: All routes excepts for the routes for signin and signup are protected. Ensure the token you recieved after signin is sent back in the header 'x-access-token' when trying to access protected routes.
 
