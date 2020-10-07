@@ -31,19 +31,67 @@ Apart from the scripts for running the application, there are scripts that do ot
 
 The endpoints on the app are:
 
-| resource                                                              | description                                                    |
-| :-------------------------------------------------------------------- | :------------------------------------------------------------- |
-| POST: `http://localhost:7077/api/v1/auth/signup`                      | register a user                                                |
-| POST: `http://localhost:7077/api/v1/auth/signin`                      | authenticate user                                              |
-| GET: `http://localhost:7077/api/v1/tickets/`                          | get all tickets                                                |
-| POST: `http://localhost:7077/api/v1/tickets/`                         | post a ticket                                                  |
-| GET: `http://localhost:7077/api/v1/tickets/:ticketId`                 | get details of a specific ticket                               |
-| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/updateStatus`  | update the status of a ticket                                  |
-| POST: `http://localhost:7077/api/v1/tickets/:ticketId/comments`       | post a comment on a ticket                                     |
-| GET: `http://localhost:7077/api/v1/tickets/:ticketId/comments`        | get all comments for a ticket                                  |
-| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` | assign a support persons or self to a ticket                   |
-| GET: `http://localhost:7077/api/v1/tickets/report`                    | get report of closed tickets in the last 30 days in csv format |
-| PATCH: `http://localhost:7077/api/v1/users/:userId`                   | update a user's role                                           |
+* `POST: http://localhost:7077/api/v1/auth/signup` : this endpoint is for registering user.
+
+It expects the input in the below format:
+
+```JSON
+{
+    "firstName": "",
+    "lastName": "",
+    "email":  "",
+    "password": ""
+}
+```
+
+* `POST: http://localhost:7077/api/v1/auth/signin` : this endpoint is for logging in a user.
+
+It expects the input in the below format:
+
+```JSON
+{
+    "email":  "",
+    "password": ""
+}
+```
+
+* `GET: http://localhost:7077/api/v1/tickets/` : this endpoint is responsible for getting all tickets.
+
+* `POST: http://localhost:7077/api/v1/tickets/` : this endpoint is for creating a new ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "title": "",
+    "content": ""
+}
+```
+* `GET: http://localhost:7077/api/v1/tickets/:ticketId` : this endpoint is responsible for getting get details of a specific ticket.
+
+* `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/updateStatus` : this endpoint is responsible for updating the status of a ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "status": "OPEN | INPROGRESS | CANCELLED | SOLVED"
+}
+
+
+* `PATCH: http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` : this endpoint is responsible for assigning a support person or self to a ticket. If supportPersonId is not supplied, then the logged in user is assigned the ticket
+
+It expects the input in the below format:
+
+```JSON
+{
+    "supportPersonId": ""
+}
+
+
+* `GET: http://localhost:7077/api/v1/tickets/report` : this endpoint is responsible for getting report of closed tickets in the last 30 days in csv format.
+
+
 
 Note: All routes excepts for the routes for signin and signup are protected. Ensure the token you recieved after signin is sent back in the header 'x-access-token' when trying to access protected routes.
 
