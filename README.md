@@ -35,12 +35,13 @@ The endpoints on the app are:
 | GET: `http://localhost:7077/api/v1/tickets/` | get all tickets |
 | POST: `http://localhost:7077/api/v1/tickets/`      | post a ticket |
 | GET: `http://localhost:7077/api/v1/tickets/:ticketId`  | get details of a specific ticket |
-| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId` | update the status of the ticket |
+| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/updateStatus` | update the status of a ticket |
 | POST: `http://localhost:7077/api/v1/tickets/:ticketId/comments` | post a comment on a ticket |
 | GET: `http://localhost:7077/api/v1/tickets/:ticketId/comments` | get all comments for a ticket |
+| PATCH: `http://localhost:7077/api/v1/tickets/:ticketId/assignSupport` | assign a support persons or self to a ticket |
 | GET: `http://localhost:7077/api/v1/tickets/report` | get report of closed tickets in the last 30 days in csv format |
-| POST: `http://localhost:7077/api/v1/users/updateUserRole` | update a user's role |
-| POST: `http://localhost:7077/api/v1/users/assignTicket` | assign tickets to support persons |
+| PATCH: `http://localhost:7077/api/v1/users/:userId` | update a user's role |
+
 
 Note: All routes excepts for the routes for signin and signup are protected. Ensure the token you recieved after signin is sent back in the header 'x-access-token' when trying to access protected routes. 
 
@@ -56,31 +57,24 @@ This application has 3 different categories of users and the category is determi
 
 ### Functionality available to the users with role of "SUPPORT"
 This user has all the ability of the above stated category and the following below: 
-* This user can see all tickets assigned to him or her.
+* This user can see all tickets that are Open or in progress.
+* This user can assign a ticket to himself to another support person
 * This user can get report of the tickets closed in the last 30 days in csv format.
 * This user can update the status of a ticket.
 
 ### Functionality available to the users with role of Admin
 This user has all the ability of the above stated category and the following below: 
 * An admin can update a user's role. This means he or she can change a user's role from just user to support person
-* An admin can assign a ticket to a person with role of support.
 
 ## Assumptions made
 * When a user registers on the application, He or She retains the role of 'USER' until the admin update the role to the something else
 * When a user visits the endpoint for getting all ticket, the experience is different depending on the role of the user
     * A user would only see tickets he or she created over time
-    * A supportperson would only see all tickets assigned to him or her
+    * A supportperson would only see all tickets are open or in progress
     * The admin will see all tickets
 
 ## Note
 ### Requirements unmet: 
-* Not enough tests. 
-* Some functionality can refactored into other functions or middleware e.g the check for the existence of a ticket. 
-* An ordinary user should not be able to see a ticket for another user unless the This should only be available to the support and admin user.
-* An ordinary user should not be able see to comments for a ticket that he or she did not create.
-* better validation and validation messages
-* More uses of types on arguments and return values. 
-
 ### Issues faces: 
 No technical issues. 
 ### Feedback
