@@ -1,0 +1,484 @@
+{
+	"info": {
+		"_postman_id": "d86c0ce1-c3fe-4437-9c1a-f75322e17721",
+		"name": "Ticketing System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"\",\n    \"lastName\": \"\",\n    \"email\":  \"\",\n    \"password\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":  \"\",\n    \"password\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/auth/signin",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user role",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"newRole\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/users/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "tickets",
+			"item": [
+				{
+					"name": "Get all tickets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"\",\n    \"content\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a ticket by Id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/:ticketId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								":ticketId"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update ticket status",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/:ticketId/updateStatus",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								":ticketId",
+								"updateStatus"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "assign ticket to support",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"supportPersonId\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/:ticketId/assignSupport",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								":ticketId",
+								"assignSupport"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get report",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-token",
+								"value": "",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								"report"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "comments",
+			"item": [
+				{
+					"name": "Add comment to a Ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-access-token",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/:ticketId/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								":ticketId",
+								"comments"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all comments to a Ticket",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-access-token",
+								"type": "text",
+								"value": "{{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:7077/api/v1/tickets/:ticketId/comments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "7077",
+							"path": [
+								"api",
+								"v1",
+								"tickets",
+								":ticketId",
+								"comments"
+							],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "b3c5efdf-1d6d-4e42-b118-ac213ab7ab1c",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c7f037e0-ea7b-4b92-94c1-678107885e68",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "9a767c52-6fdb-4d61-b958-f654b1174377",
+			"key": "token1",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1Zjc3MTczNDBhYmMzYjgyNzdhZjI4YjQiLCJmdWxsTmFtZSI6IlNhcmFoIFNhbmRhbHMiLCJpYXQiOjE2MDE2NTk5NDksImV4cCI6MTYwMjA5MTk0OX0.CjRJNNny1Tby5Jbs_xVlatTVWjas8Ln9lkI-gds9BXw"
+		},
+		{
+			"id": "92672ab6-69a2-46ba-9e71-22114ac8c3c0",
+			"key": "token",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1ZjdjNDFjZDJlNzgyNjdlNzE3MGRkYTAiLCJmdWxsTmFtZSI6IlNhcmFoIFNhbmRhbHMiLCJpYXQiOjE2MDE5Nzg4NDUsImV4cCI6MTYwMjQxMDg0NX0.8EnwE8bN2yiy869qX0qnTMoezbyL2Mcf_SHgC9jcZxw"
+		}
+	],
+	"protocolProfileBehavior": {}
+}
